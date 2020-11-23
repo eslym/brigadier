@@ -1,7 +1,5 @@
 import StringReader from "../StringReader"
 import CommandContext from "../context/CommandContext"
-import Suggestions from "../suggestion/Suggestions"
-import SuggestionsBuilder from "../suggestion/SuggestionsBuilder"
 import ArgumentType from "./ArgumentType"
 
 export enum StringType {
@@ -11,13 +9,13 @@ export enum StringType {
 }
 
 export default class StringArgumentType implements ArgumentType<string> {
-    
+
     private type: StringType;
-    
+
     private constructor (type: StringType) {
         this.type = type;
     }
-    
+
 	public static word(): StringArgumentType {
         return new StringArgumentType(StringType.SINGLE_WORD);
     }
@@ -29,11 +27,11 @@ export default class StringArgumentType implements ArgumentType<string> {
     public static greedyString(): StringArgumentType {
         return new StringArgumentType(StringType.GREEDY_PHRASE);
     }
-    
+
     public static getString(context: CommandContext<any>, name: string): string {
         return context.getArgument(name, String);
     }
-    
+
     public getType(): StringType {
         return this.type;
     }
@@ -50,23 +48,23 @@ export default class StringArgumentType implements ArgumentType<string> {
         else {
             return reader.readString();
         }
-        
+
     }
 
     public toString(): string {
         return "string()";
-	}	
-    
+	}
+
     public static escapeIfRequired(input: string): String {
         for (let c of input) {
             if (!StringReader.isAllowedInUnquotedString(c)) {
                 return StringArgumentType.escape(input);
-            }            
+            }
         }
-        
+
         return input;
     }
-    
+
     private static escape(input: string): string {
 		let result = "\"";
 		for (let i = 0; i < input.length; i++) {

@@ -1,29 +1,27 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const isEqual_1 = __importDefault(require("../util/isEqual"));
-class Suggestion {
-    constructor(range, text, tooltip = null) {
+var isEqual_1 = require("../util/isEqual");
+var Suggestion = /** @class */ (function () {
+    function Suggestion(range, text, tooltip) {
+        if (tooltip === void 0) { tooltip = null; }
         this.range = range;
         this.text = text;
         this.tooltip = tooltip;
     }
-    getRange() {
+    Suggestion.prototype.getRange = function () {
         return this.range;
-    }
-    getText() {
+    };
+    Suggestion.prototype.getText = function () {
         return this.text;
-    }
-    getTooltip() {
+    };
+    Suggestion.prototype.getTooltip = function () {
         return this.tooltip;
-    }
-    apply(input) {
+    };
+    Suggestion.prototype.apply = function (input) {
         if (this.range.getStart() === 0 && this.range.getEnd() == input.length) {
             return this.text;
         }
-        let result = "";
+        var result = "";
         if (this.range.getStart() > 0) {
             result += input.substring(0, this.range.getStart());
         }
@@ -32,32 +30,32 @@ class Suggestion {
             result += input.substring(this.range.getEnd());
         }
         return result;
-    }
-    equals(o) {
+    };
+    Suggestion.prototype.equals = function (o) {
         if (this === o)
             return true;
         if (!(o instanceof Suggestion))
             return false;
         return isEqual_1.default(this.range, o.range) && (this.text === o.text) && isEqual_1.default(this.tooltip, o.tooltip);
-    }
-    toString() {
+    };
+    Suggestion.prototype.toString = function () {
         return "Suggestion{" +
             "range=" + this.range +
             ", text='" + this.text + '\'' +
             ", tooltip='" + this.tooltip + '\'' +
             '}';
-    }
-    compareTo(o) {
+    };
+    Suggestion.prototype.compareTo = function (o) {
         return this.text < o.text ? 1 : -1;
-    }
-    compareToIgnoreCase(b) {
+    };
+    Suggestion.prototype.compareToIgnoreCase = function (b) {
         return this.text.toLowerCase() < b.text.toLowerCase() ? 1 : -1;
-    }
-    expand(command, range) {
+    };
+    Suggestion.prototype.expand = function (command, range) {
         if (range.equals(this.range)) {
             return this;
         }
-        let result = "";
+        var result = "";
         if (range.getStart() < this.range.getStart()) {
             result += command.substring(range.getStart(), this.range.getStart());
         }
@@ -66,6 +64,8 @@ class Suggestion {
             result += command.substring(this.range.getEnd(), range.getEnd());
         }
         return new Suggestion(range, result, this.tooltip);
-    }
-}
+    };
+    return Suggestion;
+}());
 exports.default = Suggestion;
+//# sourceMappingURL=Suggestion.js.map

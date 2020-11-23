@@ -1,61 +1,57 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommandDispatcher_1 = __importDefault(require("./lib/CommandDispatcher"));
-const LiteralMessage_1 = __importDefault(require("./lib/LiteralMessage"));
-const ParseResults_1 = __importDefault(require("./lib/ParseResults"));
-const StringReader_1 = __importDefault(require("./lib/StringReader"));
-const ArgumentType_1 = require("./lib/arguments/ArgumentType");
-const LiteralArgumentBuilder_1 = __importStar(require("./lib/builder/LiteralArgumentBuilder"));
-const RequiredArgumentBuilder_1 = __importStar(require("./lib/builder/RequiredArgumentBuilder"));
-const CommandContext_1 = __importDefault(require("./lib/context/CommandContext"));
-const CommandContextBuilder_1 = __importDefault(require("./lib/context/CommandContextBuilder"));
-const ParsedArgument_1 = __importDefault(require("./lib/context/ParsedArgument"));
-const ParsedCommandNode_1 = __importDefault(require("./lib/context/ParsedCommandNode"));
-const StringRange_1 = __importDefault(require("./lib/context/StringRange"));
-const SuggestionContext_1 = __importDefault(require("./lib/context/SuggestionContext"));
-const CommandSyntaxException_1 = __importDefault(require("./lib/exceptions/CommandSyntaxException"));
-const DynamicCommandExceptionType_1 = __importDefault(require("./lib/exceptions/DynamicCommandExceptionType"));
-const SimpleCommandExceptionType_1 = __importDefault(require("./lib/exceptions/SimpleCommandExceptionType"));
-const Suggestion_1 = __importDefault(require("./lib/suggestion/Suggestion"));
-const Suggestions_1 = __importDefault(require("./lib/suggestion/Suggestions"));
-const SuggestionsBuilder_1 = __importDefault(require("./lib/suggestion/SuggestionsBuilder"));
-const ArgumentCommandNode_1 = __importDefault(require("./lib/tree/ArgumentCommandNode"));
-const LiteralCommandNode_1 = __importDefault(require("./lib/tree/LiteralCommandNode"));
-const RootCommandNode_1 = __importDefault(require("./lib/tree/RootCommandNode"));
-const { word, string, greedyString, bool, integer, float } = ArgumentType_1.DefaultType;
-module.exports = {
-    dispatcher: new CommandDispatcher_1.default(),
-    word, string, greedyString, bool, integer, float,
-    literal: LiteralArgumentBuilder_1.literal, argument: RequiredArgumentBuilder_1.argument,
-    CommandDispatcher: CommandDispatcher_1.default,
-    LiteralMessage: LiteralMessage_1.default,
-    ParseResults: ParseResults_1.default,
-    StringReader: StringReader_1.default,
-    LiteralArgumentBuilder: LiteralArgumentBuilder_1.default,
-    RequiredArgumentBuilder: RequiredArgumentBuilder_1.default,
-    CommandContext: CommandContext_1.default,
-    CommandContextBuilder: CommandContextBuilder_1.default,
-    ParsedArgument: ParsedArgument_1.default,
-    ParsedCommandNode: ParsedCommandNode_1.default,
-    StringRange: StringRange_1.default,
-    SuggestionsContext: SuggestionContext_1.default,
-    CommandSyntaxException: CommandSyntaxException_1.default,
-    SimpleCommandExceptionType: SimpleCommandExceptionType_1.default,
-    DynamicCommandExceptionType: DynamicCommandExceptionType_1.default,
-    Suggestion: Suggestion_1.default,
-    Suggestions: Suggestions_1.default,
-    SuggestionsBuilder: SuggestionsBuilder_1.default,
-    ArgumentCommandNode: ArgumentCommandNode_1.default,
-    LiteralCommandNode: LiteralCommandNode_1.default,
-    RootCommandNode: RootCommandNode_1.default
-};
+exports.dispatcher = exports.float = exports.integer = exports.bool = exports.greedyString = exports.string = exports.word = void 0;
+var CommandDispatcher_1 = require("./lib/CommandDispatcher");
+var ArgumentType_1 = require("./lib/arguments/ArgumentType");
+var CommandDispatcher_2 = require("./lib/CommandDispatcher");
+Object.defineProperty(exports, "CommandDispatcher", { enumerable: true, get: function () { return CommandDispatcher_2.default; } });
+var LiteralMessage_1 = require("./lib/LiteralMessage");
+Object.defineProperty(exports, "LiteralMessage", { enumerable: true, get: function () { return LiteralMessage_1.default; } });
+var ParseResults_1 = require("./lib/ParseResults");
+Object.defineProperty(exports, "ParseResults", { enumerable: true, get: function () { return ParseResults_1.default; } });
+var StringReader_1 = require("./lib/StringReader");
+Object.defineProperty(exports, "StringReader", { enumerable: true, get: function () { return StringReader_1.default; } });
+var LiteralArgumentBuilder_1 = require("./lib/builder/LiteralArgumentBuilder");
+Object.defineProperty(exports, "LiteralArgumentBuilder", { enumerable: true, get: function () { return LiteralArgumentBuilder_1.default; } });
+Object.defineProperty(exports, "literal", { enumerable: true, get: function () { return LiteralArgumentBuilder_1.literal; } });
+var RequiredArgumentBuilder_1 = require("./lib/builder/RequiredArgumentBuilder");
+Object.defineProperty(exports, "RequiredArgumentBuilder", { enumerable: true, get: function () { return RequiredArgumentBuilder_1.default; } });
+Object.defineProperty(exports, "argument", { enumerable: true, get: function () { return RequiredArgumentBuilder_1.argument; } });
+var CommandContext_1 = require("./lib/context/CommandContext");
+Object.defineProperty(exports, "CommandContext", { enumerable: true, get: function () { return CommandContext_1.default; } });
+var CommandContextBuilder_1 = require("./lib/context/CommandContextBuilder");
+Object.defineProperty(exports, "CommandContextBuilder", { enumerable: true, get: function () { return CommandContextBuilder_1.default; } });
+var ParsedArgument_1 = require("./lib/context/ParsedArgument");
+Object.defineProperty(exports, "ParsedArgument", { enumerable: true, get: function () { return ParsedArgument_1.default; } });
+var ParsedCommandNode_1 = require("./lib/context/ParsedCommandNode");
+Object.defineProperty(exports, "ParsedCommandNode", { enumerable: true, get: function () { return ParsedCommandNode_1.default; } });
+var StringRange_1 = require("./lib/context/StringRange");
+Object.defineProperty(exports, "StringRange", { enumerable: true, get: function () { return StringRange_1.default; } });
+var SuggestionContext_1 = require("./lib/context/SuggestionContext");
+Object.defineProperty(exports, "SuggestionsContext", { enumerable: true, get: function () { return SuggestionContext_1.default; } });
+var CommandSyntaxException_1 = require("./lib/exceptions/CommandSyntaxException");
+Object.defineProperty(exports, "CommandSyntaxException", { enumerable: true, get: function () { return CommandSyntaxException_1.default; } });
+var DynamicCommandExceptionType_1 = require("./lib/exceptions/DynamicCommandExceptionType");
+Object.defineProperty(exports, "DynamicCommandExceptionType", { enumerable: true, get: function () { return DynamicCommandExceptionType_1.default; } });
+var SimpleCommandExceptionType_1 = require("./lib/exceptions/SimpleCommandExceptionType");
+Object.defineProperty(exports, "SimpleCommandExceptionType", { enumerable: true, get: function () { return SimpleCommandExceptionType_1.default; } });
+var Suggestion_1 = require("./lib/suggestion/Suggestion");
+Object.defineProperty(exports, "Suggestion", { enumerable: true, get: function () { return Suggestion_1.default; } });
+var Suggestions_1 = require("./lib/suggestion/Suggestions");
+Object.defineProperty(exports, "Suggestions", { enumerable: true, get: function () { return Suggestions_1.default; } });
+var SuggestionsBuilder_1 = require("./lib/suggestion/SuggestionsBuilder");
+Object.defineProperty(exports, "SuggestionsBuilder", { enumerable: true, get: function () { return SuggestionsBuilder_1.default; } });
+var ArgumentCommandNode_1 = require("./lib/tree/ArgumentCommandNode");
+Object.defineProperty(exports, "ArgumentCommandNode", { enumerable: true, get: function () { return ArgumentCommandNode_1.default; } });
+var LiteralCommandNode_1 = require("./lib/tree/LiteralCommandNode");
+Object.defineProperty(exports, "LiteralCommandNode", { enumerable: true, get: function () { return LiteralCommandNode_1.default; } });
+var RootCommandNode_1 = require("./lib/tree/RootCommandNode");
+Object.defineProperty(exports, "RootCommandNode", { enumerable: true, get: function () { return RootCommandNode_1.default; } });
+exports.word = ArgumentType_1.DefaultType.word;
+exports.string = ArgumentType_1.DefaultType.string;
+exports.greedyString = ArgumentType_1.DefaultType.greedyString;
+exports.bool = ArgumentType_1.DefaultType.bool;
+exports.integer = ArgumentType_1.DefaultType.integer;
+exports.float = ArgumentType_1.DefaultType.float;
+exports.dispatcher = new CommandDispatcher_1.default();
+//# sourceMappingURL=index.js.map

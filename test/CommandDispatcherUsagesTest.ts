@@ -4,12 +4,12 @@ import CommandDispatcher from "../src/lib/CommandDispatcher"
 import { literal } from "../src/lib/builder/LiteralArgumentBuilder"
 import StringReader from "../src/lib/StringReader";
 
-describe('CommandDispatcher Usage Test', () => {
+describe('CommandDispatcher Usage Test', async () => {
 
 	let subject: CommandDispatcher<Object>;
 	const source: Object = {};
-	const command: Command<Object> = () => 0;	
-	beforeEach(() => {
+	const command: Command<Object> = async () => 0;
+	beforeEach(async () => {
 		subject = new CommandDispatcher();
 		subject.register(
             literal("a")
@@ -26,7 +26,7 @@ describe('CommandDispatcher Usage Test', () => {
         );
         subject.register(literal("b").then(literal("1").executes(command)));
         subject.register(literal("c").executes(command));
-        subject.register(literal("d").requires(s => false).executes(command));
+        subject.register(literal("d").requires(async s => false).executes(command));
         subject.register(
             literal("e")
                 .executes(command)
@@ -42,11 +42,11 @@ describe('CommandDispatcher Usage Test', () => {
                 .then(
                     literal("1")
                         .then(literal("i").executes(command))
-                        .then(literal("ii").executes(command).requires(s => false))
+                        .then(literal("ii").executes(command).requires(async s => false))
                 )
                 .then(
                     literal("2")
-                        .then(literal("i").executes(command).requires(s => false))
+                        .then(literal("i").executes(command).requires(async s => false))
                         .then(literal("ii").executes(command))
                 )
         );
@@ -74,28 +74,28 @@ describe('CommandDispatcher Usage Test', () => {
         );
         subject.register(
             literal("k")
-                .redirect(get("h"))
+                .redirect(await get("h"))
         );
 	})
 
-	function get(command: string | StringReader) {
-		const t = subject.parse(command, source).getContext().getNodes();
+	async function get(command: string | StringReader) {
+		const t = (await subject.parse(command, source)).getContext().getNodes();
 		return t[t.length - 1].getNode();
 	}
 
-	it('testAllUsage_noCommands', () => {		
+	it('testAllUsage_noCommands', () => {
         subject = new CommandDispatcher();
         const results = subject.getAllUsage(subject.getRoot(), source, true);
         assert.equal([...results.entries()].length, 0);
     })
 
-    it('testSmartUsage_noCommands', () => {		
+    it('testSmartUsage_noCommands', async () => {
         subject = new CommandDispatcher();
-        const results = subject.getSmartUsage(subject.getRoot(), source);
+        const results = await subject.getSmartUsage(subject.getRoot(), source);
         assert.equal([...results.entries()].length, 0);
     })
 
-    it('testAllUsage_root', () => {		
+    it('testAllUsage_root', () => {
 		const results = subject.getAllUsage(subject.getRoot(), source, true);
         expect(results).to.deep.equal([
             "a 1 i",
@@ -124,40 +124,40 @@ describe('CommandDispatcher Usage Test', () => {
 		]);
     })
 
-    it('testSmartUsage_root', () => {		
+    it('testSmartUsage_root', async () => {
 		const results = subject.getSmartUsage(subject.getRoot(), source);
 		expect(results).to.deep.equal(
-			new Map().set(get("a"), "a (1|2)")
-            .set(get("b"), "b 1")
-            .set(get("c"), "c")
-            .set(get("e"), "e [1]")
-            .set(get("f"), "f (1|2)")
-            .set(get("g"), "g [1]")
-            .set(get("h"), "h [1|2|3]")
-            .set(get("i"), "i [1|2]")
-            .set(get("j"), "j ...")
-			.set(get("k"), "k -> h")
+			new Map().set(await get("a"), "a (1|2)")
+            .set(await get("b"), "b 1")
+            .set(await get("c"), "c")
+            .set(await get("e"), "e [1]")
+            .set(await get("f"), "f (1|2)")
+            .set(await get("g"), "g [1]")
+            .set(await get("h"), "h [1|2|3]")
+            .set(await get("i"), "i [1|2]")
+            .set(await get("j"), "j ...")
+			.set(await get("k"), "k -> h")
 		);
     })
 
-    it('testSmartUsage_h', () => {		
-        const results = subject.getSmartUsage(get("h"), source);
+    it('testSmartUsage_h', async () => {
+        const results = await subject.getSmartUsage(await get("h"), source);
         expect(results).to.deep.equal(new Map()
-            .set(get("h 1"), "[1] i")
-            .set(get("h 2"), "[2] i ii")
-            .set(get("h 3"), "[3]")
+            .set(await get("h 1"), "[1] i")
+            .set(await get("h 2"), "[2] i ii")
+            .set(await get("h 3"), "[3]")
         );
     })
 
-    it('testSmartUsage_offsetH', () => {		
+    it('testSmartUsage_offsetH', async () => {
         const offsetH = new StringReader("/|/|/h");
         offsetH.setCursor(5);
 
-        const results = subject.getSmartUsage(get(offsetH), source);
+        const results = subject.getSmartUsage(await get(offsetH), source);
         expect(results).to.deep.equal(new Map()
-            .set(get("h 1"), "[1] i")
-            .set(get("h 2"), "[2] i ii")
-            .set(get("h 3"), "[3]")
+            .set(await get("h 1"), "[1] i")
+            .set(await get("h 2"), "[2] i ii")
+            .set(await get("h 3"), "[3]")
         );
     })
 })

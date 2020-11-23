@@ -13,46 +13,46 @@ describe('floatumentTypeTest', () => {
 		type = float(-100, 100);
 	})
 
-	it('parse', () => {		
+	it('parse', () => {
         const reader = new StringReader("15");
         assert.equal(float().parse(reader), 15);
         assert.equal(reader.canRead(), false);
     })
 
-    it('parse_tooSmall', done => {		
+    it('parse_tooSmall', done => {
         const reader = new StringReader("-5");
         try {
-            float(0, 100).parse(reader);            
+            float(0, 100).parse(reader);
         } catch (ex) {
-            expect(ex.getType().toString()).to.equal(CommandSyntaxException.BUILT_IN_EXCEPTIONS.floatTooLow().toString());
-            assert.equal(ex.getCursor(), 0);
+            expect(CommandSyntaxException.prototype.getType.call(ex).toString()).to.equal(CommandSyntaxException.BUILT_IN_EXCEPTIONS.floatTooLow().toString());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
         assert.fail();
     })
 
-    it('parse_tooBig', done => {		
+    it('parse_tooBig', done => {
         const reader = new StringReader("5");
         try {
-            float(-100, 0).parse(reader);            
+            float(-100, 0).parse(reader);
         } catch (ex) {
-            expect(ex.getType().toString()).to.equal(CommandSyntaxException.BUILT_IN_EXCEPTIONS.floatTooHigh().toString());
-            assert.equal(ex.getCursor(), 0);
+            expect(CommandSyntaxException.prototype.getType.call(ex).toString()).to.equal(CommandSyntaxException.BUILT_IN_EXCEPTIONS.floatTooHigh().toString());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
         assert.fail();
     })
 
-    it('testEquals', () => {		
+    it('testEquals', () => {
 		testEquality(float(), float())
 		testEquality(float(-100, 100), float(-100, 100))
 		testEquality(float(-100, 50), float(-100, 50))
 		testEquality(float(-50, 100), float(-50, 100))
     })
 
-    it('testToString', () => {		
+    it('testToString', () => {
         assert.equal(float()+ "", "float()");
         assert.equal(float(-100)+ "", "float(-100)");
         assert.equal(float(-100, 100)+ "", "float(-100, 100)");

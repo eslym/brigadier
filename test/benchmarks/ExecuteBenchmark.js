@@ -1,33 +1,33 @@
-let output = ""
-const outputStream = {write(content) { output = content; console.log(content) }}
-
+const Benchmark = require('benchmark');
 const { literal, CommandDispatcher } = require("../../dist")
 
 const dispatcher = new CommandDispatcher();
 dispatcher.register(literal("command").executes(() => 0));
 dispatcher.register(literal("redirect").redirect(dispatcher.getRoot()));
 dispatcher.register(literal("fork").fork(dispatcher.getRoot(), () => [{}, {}, {}]));
-const simple = dispatcher.parse("command", new Object());
-const singleRedirect = dispatcher.parse("redirect command", new Object());
-const forkedRedirect = dispatcher.parse("fork command", new Object());
+const simple = dispatcher.parse("command", {});
+const singleRedirect = dispatcher.parse("redirect command", {});
+const forkedRedirect = dispatcher.parse("fork command", {});
 
-bench(
-	[
-		{
-			label: "execute simple",
-			fn() { dispatcher.execute(simple) }
-		},
-		{
-			label: "execute single redirect",
-			fn() { dispatcher.execute(singleRedirect) }
-		},
-		{
-			label: "execute forked redirect",
-			fn() { dispatcher.execute(forkedRedirect) }
-		},	
-	],
-	{ stream: outputStream, runs: 1000 }
-)
+const ExecuteSimple = {
+	defer: true,
+	async fn(deferred){
+		dispatcher.execute(await simple).then(()=>deferred.resolve());
+	}
+};
 
-const d = new Date();
-require('fs').writeFileSync(`./BenchmarkResult/Execute-${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}-${d.getHours()}-${d.getMinutes()}.txt`, output.replace(/\[1m/g, '').replace(/\[0m/g, ''))
+const ExecuteSingleRedirect = {
+	defer: true,
+	async fn(deferred){
+		dispatcher.execute(await singleRedirect).then(()=>deferred.resolve());
+	}
+};
+
+const ExecuteForkedRedirect = {
+	defer: true,
+	async fn(deferred){
+		dispatcher.execute(await forkedRedirect).then(()=>deferred.resolve());
+	}
+};
+
+module.exports = {ExecuteSimple, ExecuteSingleRedirect, ExecuteForkedRedirect};

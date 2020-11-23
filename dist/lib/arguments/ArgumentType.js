@@ -1,12 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const BoolArgumentType_1 = __importDefault(require("./BoolArgumentType"));
-const IntegerArgumentType_1 = __importDefault(require("./IntegerArgumentType"));
-const FloatArgumentType_1 = __importDefault(require("./FloatArgumentType"));
-const StringArgumentType_1 = __importDefault(require("./StringArgumentType"));
+exports.DefaultType = void 0;
+var BoolArgumentType_1 = require("./BoolArgumentType");
+var IntegerArgumentType_1 = require("./IntegerArgumentType");
+var FloatArgumentType_1 = require("./FloatArgumentType");
+var StringArgumentType_1 = require("./StringArgumentType");
 exports.DefaultType = {
     bool: BoolArgumentType_1.default.bool,
     integer: IntegerArgumentType_1.default.integer,
@@ -15,3 +13,4 @@ exports.DefaultType = {
     string: StringArgumentType_1.default.string,
     greedyString: StringArgumentType_1.default.greedyString
 };
+//# sourceMappingURL=ArgumentType.js.map

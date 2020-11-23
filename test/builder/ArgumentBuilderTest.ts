@@ -24,7 +24,7 @@ describe('ArgumentBuilderTest', () => {
 		builder = new TestableArgumentBuilder();
 	})
 
-	it('testArguments', () => {		
+	it('testArguments', () => {
         const arg = argument("bar", integer());
 
         builder.then(arg);
@@ -33,29 +33,29 @@ describe('ArgumentBuilderTest', () => {
         expect([...builder.getArguments()][0].equals(arg.build())).to.equal(true);
     })
 
-    it('testRedirect', () => {		
+    it('testRedirect', () => {
         const target = instance(mock(CommandNode));
         builder.redirect(target);
         assert.deepEqual(builder.getRedirect(), target);
     })
 
-	it('testRedirect_withChild', () => {		
+	it('testRedirect_withChild', () => {
 		try {
 			const target = instance(mock(CommandNode));
 			builder.then(literal("foo"));
 			builder.redirect(target);
 			assert.fail();
-		} catch (ignore) {			
+		} catch (ignore) {
 		}
     })
 
-	it('testThen_withRedirect', () => {		
+	it('testThen_withRedirect', () => {
 		try {
 			const target = instance(mock(CommandNode));
 			builder.redirect(target);
 			builder.then(literal("foo"));
 			assert.fail();
-		} catch (ignore) {			
+		} catch (ignore) {
 		}
     })
 })

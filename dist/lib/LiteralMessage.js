@@ -1,14 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class LiteralMessage {
-    constructor(str) {
+var LiteralMessage = /** @class */ (function () {
+    function LiteralMessage(str) {
         this.str = str;
     }
-    getString() {
+    LiteralMessage.prototype.getString = function () {
         return this.str;
-    }
-    toString() {
+    };
+    LiteralMessage.prototype.toString = function () {
         return this.str;
-    }
-}
+    };
+    return LiteralMessage;
+}());
 exports.default = LiteralMessage;
+//# sourceMappingURL=LiteralMessage.js.map

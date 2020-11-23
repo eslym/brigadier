@@ -20,7 +20,7 @@ const createMockedCommand = (): MockedCommand<Object> => {
 	const execHistory = [];
 	const execCount = [];
 	const whenArg = new Map<any, number>();
-	const command = (arg): number => {
+	const command = async (arg): Promise<number> => {
 		let i = execHistory.indexOf(arg);
 		if (i === -1) {
 			i = execCount.length;
@@ -51,14 +51,14 @@ const createMockedCommand = (): MockedCommand<Object> => {
 		whenArg.set(o, r);
 	}
 	command.execHistory	= execHistory;
-	return command;	
+	return command;
 }
 
 describe('CommandDispatcherTest', () => {
 
 	let command;
-	let subject: CommandDispatcher<Object>;	
-	const source: Object = {};	
+	let subject: CommandDispatcher<Object>;
+	const source: Object = {};
 
 	beforeEach(() => {
 		subject = new CommandDispatcher();
@@ -73,36 +73,36 @@ describe('CommandDispatcherTest', () => {
 		return result;
 	}
 
-	it('testCreateAndExecuteCommand', () => {		
-		subject.register(literal("foo").executes(command));				
-        assert.equal(subject.execute("foo", source), 42);
+	it('testCreateAndExecuteCommand', async () => {
+		subject.register(literal("foo").executes(command));
+        assert.equal(await subject.execute("foo", source), 42);
 		assert.equal(command.verify("anything") === 1, true);
     })
 
-    it('testCreateAndExecuteOffsetCommand', () => {		
+    it('testCreateAndExecuteOffsetCommand', async () => {
         subject.register(literal("foo").executes(command));
-        assert.equal(subject.execute(inputWithOffset("/foo", 1), source), 42);
+        assert.equal(await subject.execute(inputWithOffset("/foo", 1), source), 42);
         assert.equal(command.verify("anything") === 1, true);
     })
 
-    it('testCreateAndMergeCommands', () => {		
+    it('testCreateAndMergeCommands', async () => {
         subject.register(literal("base").then(literal("foo").executes(command)));
         subject.register(literal("base").then(literal("bar").executes(command)));
 
-        assert.equal(subject.execute("base foo", source), 42);
-        assert.equal(subject.execute("base bar", source), 42);
+        assert.equal(await subject.execute("base foo", source), 42);
+        assert.equal(await subject.execute("base bar", source), 42);
         assert.equal(command.verify("anything") === 2, true);
     })
 
-    it('testExecuteUnknownCommand', done => {		
+    it('testExecuteUnknownCommand', async done => {
         subject.register(literal("bar"));
         subject.register(literal("baz"));
 
         try {
-            subject.execute("foo", source);            
+            await subject.execute("foo", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
-            assert.equal(ex.getCursor(), 0);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
@@ -110,14 +110,14 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecuteImpermissibleCommand', done => {		
-        subject.register(literal("foo").requires(s => false));
+    it('testExecuteImpermissibleCommand', async done => {
+        subject.register(literal("foo").requires(async s => false));
 
         try {
-            subject.execute("foo", source);            
+            await subject.execute("foo", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
-            assert.equal(ex.getCursor(), 0);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
@@ -125,14 +125,14 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecuteEmptyCommand', done => {		
+    it('testExecuteEmptyCommand', async done => {
         subject.register(literal(""));
 
         try {
-            subject.execute("", source);            
+            await subject.execute("", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
-            assert.equal(ex.getCursor(), 0);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
@@ -140,14 +140,14 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecuteUnknownSubcommand', done => {		
+    it('testExecuteUnknownSubcommand', async done => {
         subject.register(literal("foo").executes(command));
 
         try {
-            subject.execute("foo bar", source);            
+            await subject.execute("foo bar", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument());
-            assert.equal(ex.getCursor(), 4);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 4);
             done();
             return;
         }
@@ -155,14 +155,14 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecuteIncorrectLiteral', done => {		
+    it('testExecuteIncorrectLiteral', async done => {
         subject.register(literal("foo").executes(command).then(literal("bar")));
 
         try {
-            subject.execute("foo baz", source);            
+            await subject.execute("foo baz", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument());
-            assert.equal(ex.getCursor(), 4);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 4);
             done();
             return;
         }
@@ -170,7 +170,7 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecuteAmbiguousIncorrectArgument', done => {		
+    it('testExecuteAmbiguousIncorrectArgument', async done => {
         subject.register(
             literal("foo").executes(command)
                 .then(literal("bar"))
@@ -178,10 +178,10 @@ describe('CommandDispatcherTest', () => {
         );
 
         try {
-            subject.execute("foo unknown", source);            
+            await subject.execute("foo unknown", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument());
-            assert.equal(ex.getCursor(), 4);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 4);
             done();
             return;
         }
@@ -189,8 +189,8 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecuteSubcommand', () => {
-		const subCommand = createMockedCommand()		
+    it('testExecuteSubcommand', async () => {
+		const subCommand = createMockedCommand()
 		subCommand.when("anything", 100);
 
         subject.register(literal("foo").then(
@@ -201,28 +201,28 @@ describe('CommandDispatcherTest', () => {
             literal("c")
         ).executes(command));
 
-        assert.equal(subject.execute("foo =", source), 100);
+        assert.equal(await subject.execute("foo =", source), 100);
         assert.equal(subCommand.verify("anything") === 1, true);
     })
 
-    it('testParseIncompleteLiteral', () => {		
+    it('testParseIncompleteLiteral', async () => {
         subject.register(literal("foo").then(literal("bar").executes(command)));
 
-        const parse = subject.parse("foo ", source);
+        const parse = await subject.parse("foo ", source);
         assert.equal(parse.getReader().getRemaining(), " ");
         assert.equal(parse.getContext().getNodes().length, 1);
     })
 
-    it('testParseIncompleteArgument', () => {		
+    it('testParseIncompleteArgument', async () => {
         subject.register(literal("foo").then(argument("bar", integer()).executes(command)));
 
-        const parse = subject.parse("foo ", source);
+        const parse = await subject.parse("foo ", source);
         assert.equal(parse.getReader().getRemaining(), " ");
         assert.equal(parse.getContext().getNodes().length, 1);
     })
 
-    it('testExecuteAmbiguiousParentSubcommand', () => {		
-        const subCommand = createMockedCommand()		
+    it('testExecuteAmbiguiousParentSubcommand', async () => {
+        const subCommand = createMockedCommand()
 		subCommand.when("anything", 100);
 
         subject.register(
@@ -240,13 +240,13 @@ describe('CommandDispatcherTest', () => {
                 )
         );
 
-        assert.equal(subject.execute("test 1 2", source), 100);
+        assert.equal(await subject.execute("test 1 2", source), 100);
         assert.equal(subCommand.verify("anything") > 0, true);
         assert.equal(command.verify("anything") === 0, true);
     })
 
-    it('testExecuteAmbiguiousParentSubcommandViaRedirect', () => {		
-        const subCommand = createMockedCommand()		
+    it('testExecuteAmbiguiousParentSubcommandViaRedirect', async () => {
+        const subCommand = createMockedCommand()
 		subCommand.when("anything", 100);
 
         const real = subject.register(
@@ -266,18 +266,18 @@ describe('CommandDispatcherTest', () => {
 
         subject.register(literal("redirect").redirect(real));
 
-        assert.equal(subject.execute("redirect 1 2", source), 100);
+        assert.equal(await subject.execute("redirect 1 2", source), 100);
         assert.equal(subCommand.verify("anything") > 0, true);
         assert.equal(command.verify("anything") === 0, true);
     })
 
-    it('testExecuteRedirectedMultipleTimes', () => {		
+    it('testExecuteRedirectedMultipleTimes', async () => {
         const concreteNode = subject.register(literal("actual").executes(command));
         const redirectNode = subject.register(literal("redirected").redirect(subject.getRoot()));
 
         const input = "redirected redirected actual";
 
-        const parse = subject.parse(input, source);
+        const parse = await subject.parse(input, source);
         assert.equal(parse.getContext().getRange().get(input), "redirected");
         assert.equal(parse.getContext().getNodes().length, 1);
         assert.equal(parse.getContext().getRootNode(), subject.getRoot());
@@ -300,11 +300,11 @@ describe('CommandDispatcherTest', () => {
         expect(child2.getNodes()[0].getRange()).to.deep.equal(child2.getRange());
         assert.equal(child2.getNodes()[0].getNode(), concreteNode);
 
-        assert.equal(subject.execute(parse), 42);
+        assert.equal(await subject.execute(parse), 42);
         assert.equal(command.verify("anything") > 0, true);
     })
 
-    it('testExecuteRedirected', () => {		
+    it('testExecuteRedirected', async () => {
 		const source1 = { name: "Obj1" };
 		const source2 = { name: "Obj2" };
         const mockedModifier: RedirectModifier<Object> = {
@@ -318,7 +318,7 @@ describe('CommandDispatcherTest', () => {
         const redirectNode = subject.register(literal("redirected").fork(subject.getRoot(), mockedModifier));
 
         const input = "redirected actual";
-        const parse = subject.parse(input, source);
+        const parse = await subject.parse(input, source);
         assert.equal(parse.getContext().getRange().get(input), "redirected");
         assert.equal(parse.getContext().getNodes().length, 1);
         assert.equal(parse.getContext().getRootNode(), subject.getRoot());
@@ -334,7 +334,7 @@ describe('CommandDispatcherTest', () => {
         expect(parent.getNodes()[0].getRange()).to.deep.equal(parent.getRange());
         assert.equal(parent.getNodes()[0].getNode(), concreteNode);
         assert.equal(parent.getSource(), source);
-		assert.equal(subject.execute(parse), 2);
+		assert.equal(await subject.execute(parse), 2);
 
 		let flag1 = 0, flag2 = 0;
 		command.execHistory.forEach(v => {
@@ -345,16 +345,16 @@ describe('CommandDispatcherTest', () => {
 			assert.fail();
     })
 
-    it('testExecuteOrphanedSubcommand', done => {		
+    it('testExecuteOrphanedSubcommand', async done => {
         subject.register(literal("foo").then(
             argument("bar", integer())
         ).executes(command));
 
         try {
-            subject.execute("foo 5", source);
+            await subject.execute("foo 5", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
-            assert.equal(ex.getCursor(), 5);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 5);
             done();
             return;
         }
@@ -362,25 +362,25 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecute_invalidOther', () => {		
+    it('testExecute_invalidOther', async () => {
 		const wrongCommand = createMockedCommand();
 
         subject.register(literal("w").executes(wrongCommand));
         subject.register(literal("world").executes(command));
 
-        assert.equal(subject.execute("world", source), 42);
+        assert.equal(await subject.execute("world", source), 42);
         assert.equal(wrongCommand.verify("anything") === 0, true);
         assert.equal(command.verify("anything") > 0, true);
     })
 
-    it('parse_noSpaceSeparator', done => {		
+    it('parse_noSpaceSeparator', async done => {
         subject.register(literal("foo").then(argument("bar", integer()).executes(command)));
 
         try {
-            subject.execute("foo$", source);            
+            await subject.execute("foo$", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
-            assert.equal(ex.getCursor(), 0);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
@@ -388,16 +388,16 @@ describe('CommandDispatcherTest', () => {
         assert.fail();
     })
 
-    it('testExecuteInvalidSubcommand', done => {		
+    it('testExecuteInvalidSubcommand', async done => {
         subject.register(literal("foo").then(
             argument("bar", integer())
         ).executes(command));
 
         try {
-            subject.execute("foo bar", source);            
+            await subject.execute("foo bar", source);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerExpectedInt());
-            assert.equal(ex.getCursor(), 4);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerExpectedInt());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 4);
             done();
             return;
         }

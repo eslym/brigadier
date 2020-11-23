@@ -9,20 +9,20 @@ describe('LiteralArgumentBuilderTest', () => {
 
 	let builder: RequiredArgumentBuilder<Object, number>;
 	const type: ArgumentType<number>  = instance(mock(IntegerArgumentType));
-	const command: Command<Object> = () => 0;
+	const command: Command<Object> = async () => 0;
 
 	beforeEach(() => {
 		builder = argument("foo", type);
 	})
 
-	it('testBuild', () => {		
+	it('testBuild', () => {
         const node = builder.build();
 
         assert.equal(node.getName(), "foo");
         assert.equal(node.getType(), type);
     })
 
-    it('testBuildWithExecutor', () => {		
+    it('testBuildWithExecutor', () => {
         const node = builder.executes(command).build();
 
         assert.equal(node.getName(), "foo");
@@ -30,7 +30,7 @@ describe('LiteralArgumentBuilderTest', () => {
         assert.equal(node.getCommand(), command);
     })
 
-    it('testBuildWithChildren', () => {		
+    it('testBuildWithChildren', () => {
         builder.then(argument("bar", type));
         builder.then(argument("baz", type));
         const node = builder.build();

@@ -6,28 +6,28 @@ import CommandSyntaxException from "../../src/lib/exceptions/CommandSyntaxExcept
 import SimpleCommandExceptionType from "../../src/lib/exceptions/SimpleCommandExceptionType"
 
 describe('SimpleCommandSyntaxExceptionTypeTest', () => {
-	it('createWithContext', () => {		
+	it('createWithContext', () => {
         const type = new SimpleCommandExceptionType(new LiteralMessage("error"));
         const reader = new StringReader("Foo bar");
         reader.setCursor(5);
         const exception = type.createWithContext(reader);
-        assert.deepEqual(exception.getType(), type);
-        assert.equal(exception.getInput(), "Foo bar");
-        assert.equal(exception.getCursor(), 5);
+        assert.deepEqual(CommandSyntaxException.prototype.getType.call(exception), type);
+        assert.equal(CommandSyntaxException.prototype.getInput.call(exception), "Foo bar");
+        assert.equal(CommandSyntaxException.prototype.getCursor.call(exception), 5);
     })
 
-    it('getContext_none', () => {		
+    it('getContext_none', () => {
         const exception = new CommandSyntaxException({}, new LiteralMessage("error"));
-        assert.equal(exception.getContext(), null);
+        assert.equal(CommandSyntaxException.prototype.getContext.call(exception), null);
     })
 
-    it('getContext_short', () => {		
+    it('getContext_short', () => {
         const exception = new CommandSyntaxException({}, new LiteralMessage("error"), "Hello world!", 5);
-        assert.equal(exception.getContext(), "Hello<--[HERE]");
+        assert.equal(CommandSyntaxException.prototype.getContext.call(exception), "Hello<--[HERE]");
     })
 
-    it('getContext_long', () => {		
+    it('getContext_long', () => {
         const exception = new CommandSyntaxException({}, new LiteralMessage("error"), "Hello world! This has an error in it. Oh dear!", 20);
-        assert.equal(exception.getContext(), "...d! This ha<--[HERE]");
+        assert.equal(CommandSyntaxException.prototype.getContext.call(exception), "...d! This ha<--[HERE]");
     })
 })

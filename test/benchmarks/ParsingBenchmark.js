@@ -1,6 +1,3 @@
-let output = ""
-const outputStream = {write(content) { output = content; console.log(content) }}
-
 const { literal, CommandDispatcher } = require("../../dist")
 
 const subject = new CommandDispatcher();
@@ -70,27 +67,23 @@ subject.register(
 		.redirect(h)
 );
 
-bench(
-	[
-		{
-			label: "parse a 1 i",
-			fn() { subject.parse("a 1 i", new Object()); }
-		},
-		{
-			label: "parse c",
-			fn() { subject.parse("c", new Object()); }
-		},
-		{
-			label: "parse k 1 i",
-			fn() { subject.parse("k 1 i", new Object()); }
-		},
-		{
-			label: "parse _",
-			fn() { subject.parse("c", new Object()); }
+module.exports = {
+	Parse_A_1_I: {
+		defer: true,
+		fn(deferred){
+			subject.parse("a 1 i", {}).then(deferred.resolve());
 		}
-	],
-	{ stream: outputStream, runs: 1000 }
-)
-
-const d = new Date();
-require('fs').writeFileSync(`./BenchmarkResult/Parsing-${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}-${d.getHours()}-${d.getMinutes()}.txt`, output.replace(/\[1m/g, '').replace(/\[0m/g, ''))
+	},
+	Parse_C: {
+		defer: true,
+		fn(deferred){
+			subject.parse("c", {}).then(deferred.resolve());
+		}
+	},
+	Parse_K_1_I: {
+		defer: true,
+		fn(deferred){
+			subject.parse("k 1 i", {}).then(deferred.resolve());
+		}
+	}
+};

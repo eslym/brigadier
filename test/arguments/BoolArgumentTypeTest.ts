@@ -6,8 +6,8 @@ import StringReader from "../../src/lib/StringReader"
 describe('BoolArgumentTypeTest', () => {
 	const type = DefaultType.bool();
 
-	it('parse', () => {		
-		const mockedReader = mock(StringReader);		
+	it('parse', () => {
+		const mockedReader = mock(StringReader);
 		when(mockedReader.readBoolean()).thenReturn(true);
 
 		const reader = instance(mockedReader);

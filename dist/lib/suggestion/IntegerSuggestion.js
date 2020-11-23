@@ -1,40 +1,55 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const Suggestion_1 = __importDefault(require("./Suggestion"));
-class IntegerSuggestion extends Suggestion_1.default {
-    constructor(range, value, tooltip = null) {
-        super(range, value.toString(), tooltip);
-        this.value = value;
+var Suggestion_1 = require("./Suggestion");
+var IntegerSuggestion = /** @class */ (function (_super) {
+    __extends(IntegerSuggestion, _super);
+    function IntegerSuggestion(range, value, tooltip) {
+        if (tooltip === void 0) { tooltip = null; }
+        var _this = _super.call(this, range, value.toString(), tooltip) || this;
+        _this.value = value;
+        return _this;
     }
-    getValue() {
+    IntegerSuggestion.prototype.getValue = function () {
         return this.value;
-    }
-    equals(o) {
+    };
+    IntegerSuggestion.prototype.equals = function (o) {
         if (this === o)
             return true;
         if (!(o instanceof IntegerSuggestion))
             return false;
-        return this.value == o.value && super.equals(o);
-    }
-    toString() {
+        return this.value == o.value && _super.prototype.equals.call(this, o);
+    };
+    IntegerSuggestion.prototype.toString = function () {
         return "IntegerSuggestion{" +
             "value=" + this.value +
             ", range=" + this.getRange() +
             ", text='" + this.getText() + '\'' +
             ", tooltip='" + this.getTooltip() + '\'' +
             '}';
-    }
-    compareTo(o) {
+    };
+    IntegerSuggestion.prototype.compareTo = function (o) {
         if (o instanceof IntegerSuggestion) {
             return this.value < o.value ? 1 : -1;
         }
-        return super.compareTo(o);
-    }
-    compareToIgnoreCase(b) {
+        return _super.prototype.compareTo.call(this, o);
+    };
+    IntegerSuggestion.prototype.compareToIgnoreCase = function (b) {
         return this.compareTo(b);
-    }
-}
+    };
+    return IntegerSuggestion;
+}(Suggestion_1.default));
 exports.default = IntegerSuggestion;
+//# sourceMappingURL=IntegerSuggestion.js.map

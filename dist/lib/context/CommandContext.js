@@ -1,11 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const isEqual_1 = __importDefault(require("../util/isEqual"));
-class CommandContext {
-    constructor(source, input, args, command, rootNode, nodes, range, child, modifier, forks) {
+var isEqual_1 = require("../util/isEqual");
+var CommandContext = /** @class */ (function () {
+    function CommandContext(source, input, args, command, rootNode, nodes, range, child, modifier, forks) {
         this.source = source;
         this.input = input;
         this.args = args;
@@ -17,41 +14,41 @@ class CommandContext {
         this.modifier = modifier;
         this.forks = forks;
     }
-    copyFor(source) {
+    CommandContext.prototype.copyFor = function (source) {
         if (this.source === source)
             return this;
         return new CommandContext(source, this.input, this.args, this.command, this.rootNode, this.nodes, this.range, this.child, this.modifier, this.forks);
-    }
-    getChild() {
+    };
+    CommandContext.prototype.getChild = function () {
         return this.child;
-    }
-    getLastChild() {
-        let result = this;
+    };
+    CommandContext.prototype.getLastChild = function () {
+        var result = this;
         while (!(result.getChild() == null)) {
             result = result.getChild();
         }
         return result;
-    }
-    getCommand() {
+    };
+    CommandContext.prototype.getCommand = function () {
         return this.command;
-    }
-    getSource() {
+    };
+    CommandContext.prototype.getSource = function () {
         return this.source;
-    }
-    getArgument(name, clazz) {
-        const arg = this.args.get(name);
+    };
+    CommandContext.prototype.getArgument = function (name, clazz) {
+        var arg = this.args.get(name);
         if (arg == null) {
             throw new Error("No such argument '" + name + "' exists on this command");
         }
-        let result = arg.getResult();
+        var result = arg.getResult();
         if (clazz == null) {
             return result;
         }
         else {
             return clazz(result);
         }
-    }
-    equals(o) {
+    };
+    CommandContext.prototype.equals = function (o) {
         if (this === o)
             return true;
         if (!(o instanceof CommandContext))
@@ -66,30 +63,30 @@ class CommandContext {
             return false;
         if (!isEqual_1.default(this.source, o.source))
             return false;
-        if (!(this.child == null) ? !this.child.equals(o.child) : o.child != null)
-            return false;
-        return true;
-    }
-    getRedirectModifier() {
+        return !(!(this.child == null) ? !this.child.equals(o.child) : o.child != null);
+    };
+    CommandContext.prototype.getRedirectModifier = function () {
         return this.modifier;
-    }
-    getRange() {
+    };
+    CommandContext.prototype.getRange = function () {
         return this.range;
-    }
-    getInput() {
+    };
+    CommandContext.prototype.getInput = function () {
         return this.input;
-    }
-    getRootNode() {
+    };
+    CommandContext.prototype.getRootNode = function () {
         return this.rootNode;
-    }
-    getNodes() {
+    };
+    CommandContext.prototype.getNodes = function () {
         return this.nodes;
-    }
-    hasNodes() {
+    };
+    CommandContext.prototype.hasNodes = function () {
         return this.nodes.length >= 0;
-    }
-    isForked() {
+    };
+    CommandContext.prototype.isForked = function () {
         return this.forks;
-    }
-}
+    };
+    return CommandContext;
+}());
 exports.default = CommandContext;
+//# sourceMappingURL=CommandContext.js.map

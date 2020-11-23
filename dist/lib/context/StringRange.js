@@ -1,46 +1,48 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class StringRange {
-    constructor(start, end) {
+var StringRange = /** @class */ (function () {
+    function StringRange(start, end) {
         this.start = start;
         this.end = end;
     }
-    static at(pos) {
+    StringRange.at = function (pos) {
         return new StringRange(pos, pos);
-    }
-    static between(start, end) {
+    };
+    StringRange.between = function (start, end) {
         return new StringRange(start, end);
-    }
-    static encompassing(a, b) {
+    };
+    StringRange.encompassing = function (a, b) {
         return new StringRange(Math.min(a.getStart(), b.getStart()), Math.max(a.getEnd(), b.getEnd()));
-    }
-    getStart() {
+    };
+    StringRange.prototype.getStart = function () {
         return this.start;
-    }
-    getEnd() {
+    };
+    StringRange.prototype.getEnd = function () {
         return this.end;
-    }
-    get(str) {
+    };
+    StringRange.prototype.get = function (str) {
         if (typeof str === "string")
             return str.substring(this.start, this.end);
         else
             return str.getString().substring(this.start, this.end);
-    }
-    isEmpty() {
+    };
+    StringRange.prototype.isEmpty = function () {
         return this.start === this.end;
-    }
-    getLength() {
+    };
+    StringRange.prototype.getLength = function () {
         return this.end - this.start;
-    }
-    equals(o) {
+    };
+    StringRange.prototype.equals = function (o) {
         if (this === o)
             return true;
         if (!(o instanceof StringRange))
             return false;
         return this.start === o.start && this.end == o.end;
-    }
-    toString() {
+    };
+    StringRange.prototype.toString = function () {
         return "StringRange{" + "start=" + this.start + ", end=" + this.end + '}';
-    }
-}
+    };
+    return StringRange;
+}());
 exports.default = StringRange;
+//# sourceMappingURL=StringRange.js.map

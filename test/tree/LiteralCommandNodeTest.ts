@@ -13,32 +13,32 @@ import StringRange from "../../src/lib/context/StringRange"
 
 describe('LiteralCommandNodeTest', () => {
 	let node: LiteralCommandNode<Object>;
-	let contextBuilder: CommandContextBuilder<Object>;	
+	let contextBuilder: CommandContextBuilder<Object>;
 
 	beforeEach(() => {
 		node = literal("foo").build();
         contextBuilder = new CommandContextBuilder(new CommandDispatcher(), new Object(), new RootCommandNode(), 0);
 	})
 
-	it('testParse', () => {		
+	it('testParse', () => {
         const reader = new StringReader("foo bar");
         node.parse(reader, contextBuilder);
         assert.equal(reader.getRemaining(), " bar");
     })
 
-    it('testParseExact', () => {		
+    it('testParseExact', () => {
         const reader = new StringReader("foo");
         node.parse(reader, contextBuilder);
         assert.equal(reader.getRemaining(), "");
     })
 
-    it('testParseSimilar', done => {		
+    it('testParseSimilar', done => {
         const reader = new StringReader("foobar");
         try {
-            node.parse(reader, contextBuilder);            
+            node.parse(reader, contextBuilder);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect());
-            assert.equal(ex.getCursor(), 0);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
@@ -46,13 +46,13 @@ describe('LiteralCommandNodeTest', () => {
         assert.fail();
     })
 
-    it('testParseInvalid', done => {		
+    it('testParseInvalid', done => {
         const reader = new StringReader("bar");
         try {
-            node.parse(reader, contextBuilder);            
+            node.parse(reader, contextBuilder);
         } catch (ex) {
-            assert.equal(ex.getType(), CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect());
-            assert.equal(ex.getCursor(), 0);
+            assert.equal(CommandSyntaxException.prototype.getType.call(ex), CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect());
+            assert.equal(CommandSyntaxException.prototype.getCursor.call(ex), 0);
             done();
             return;
         }
@@ -60,11 +60,11 @@ describe('LiteralCommandNodeTest', () => {
         assert.fail();
     })
 
-    it('testUsage', () => {		
+    it('testUsage', () => {
         assert.equal(node.getUsageText(), "foo");
     })
 
-    it('testSuggestions', async () => {		
+    it('testSuggestions', async () => {
         const empty = await node.listSuggestions(contextBuilder.build(""), new SuggestionsBuilder("", 0));
         expect(empty.getList()).to.deep.equal([new Suggestion(StringRange.at(0), "foo")]);
 
@@ -78,8 +78,8 @@ describe('LiteralCommandNodeTest', () => {
         assert.equal(food.isEmpty(), true);
     })
 
-    it('testEquals', () => {		
-        const command = () => 0;
+    it('testEquals', () => {
+        const command = async () => 0;
 
 		testEquality(
 			literal("foo").build(),
@@ -103,7 +103,7 @@ describe('LiteralCommandNodeTest', () => {
 		)
     })
 
-    it('testCreateBuilder', () => {		
+    it('testCreateBuilder', () => {
         const builder = node.createBuilder();
         assert.deepEqual(builder.getLiteral(), node.getLiteral());
         assert.deepEqual(builder.getRequirement(), node.getRequirement());

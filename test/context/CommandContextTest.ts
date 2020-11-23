@@ -16,11 +16,11 @@ describe('CommandContextTest', () => {
 
 	beforeEach(() => {
 		builder = new CommandContextBuilder(dispatcher, source, rootNode, 0);
-	})	
+	})
 
 	it('testGetArgument_nonexistent', done => {
 		try {
-			builder.build("").getArgument("foo");			
+			builder.build("").getArgument("foo");
 		} catch (ex) {
 			done();
 			return;
@@ -29,10 +29,10 @@ describe('CommandContextTest', () => {
 		assert.fail();
     })
 
-    it('testGetArgument_noConverter', done => {		
+    it('testGetArgument_noConverter', done => {
 		try {
 			const context = builder.withArgument("foo", new ParsedArgument(0, 1, Object.create(null))).build("123");
-			context.getArgument("foo", String);			
+			context.getArgument("foo", String);
 		} catch (ex) {
 			done();
 			return;
@@ -41,30 +41,30 @@ describe('CommandContextTest', () => {
 		assert.fail();
     })
 
-    it('testGetArgument', () => {		
+    it('testGetArgument', () => {
         const context = builder.withArgument("foo", new ParsedArgument(0, 1, 123)).build("123");
         assert.equal(context.getArgument("foo", Number), 123);
     })
 
-    it('testSource', () => {		
+    it('testSource', () => {
         assert.deepEqual(builder.build("").getSource(), source);
     })
 
-    it('testRootNode', () => {		
+    it('testRootNode', () => {
         assert.deepEqual(builder.build("").getRootNode(), rootNode);
     })
 
-    it('testEquals', () => {		
+    it('testEquals', () => {
         const otherSource = new Object();
-        const command = () => 1;
-		const otherCommand = () => 2;
-		
+        const command = async () => 1;
+		const otherCommand = async () => 2;
+
 		const mockedCommandNode = mock(CommandNode)
         const rootNode = new RootCommandNode()
         const otherRootNode = new RootCommandNode()
         const node: CommandNode<Object> = instance(mockedCommandNode)
         const otherNode: CommandNode<Object> = instance(mockedCommandNode)
-        
+
 		testEquality(new CommandContextBuilder(dispatcher, source, rootNode, 0).build(""), new CommandContextBuilder(dispatcher, source, rootNode, 0).build(""))
 		testEquality(new CommandContextBuilder(dispatcher, source, otherRootNode, 0).build(""), new CommandContextBuilder(dispatcher, source, otherRootNode, 0).build(""))
 		testEquality(new CommandContextBuilder(dispatcher, otherSource, rootNode, 0).build(""), new CommandContextBuilder(dispatcher, otherSource, rootNode, 0).build(""))
@@ -72,6 +72,6 @@ describe('CommandContextTest', () => {
 		testEquality(new CommandContextBuilder(dispatcher, source, rootNode, 0).withCommand(otherCommand).build(""), new CommandContextBuilder(dispatcher, source, rootNode, 0).withCommand(otherCommand).build(""))
 		testEquality(new CommandContextBuilder(dispatcher, source, rootNode, 0).withArgument("foo", new ParsedArgument(0, 1, 123)).build("123"), new CommandContextBuilder(dispatcher, source, rootNode, 0).withArgument("foo", new ParsedArgument(0, 1, 123)).build("123"))
 		testEquality(new CommandContextBuilder(dispatcher, source, rootNode, 0).withNode(node, StringRange.between(0, 3)).withNode(otherNode, StringRange.between(4, 6)).build("123 456"), new CommandContextBuilder(dispatcher, source, rootNode, 0).withNode(node, StringRange.between(0, 3)).withNode(otherNode, StringRange.between(4, 6)).build("123 456"))
-		testEquality(new CommandContextBuilder(dispatcher, source, rootNode, 0).withNode(otherNode, StringRange.between(0, 3)).withNode(node, StringRange.between(4, 6)).build("123 456"), new CommandContextBuilder(dispatcher, source, rootNode, 0).withNode(otherNode, StringRange.between(0, 3)).withNode(node, StringRange.between(4, 6)).build("123 456"))        
+		testEquality(new CommandContextBuilder(dispatcher, source, rootNode, 0).withNode(otherNode, StringRange.between(0, 3)).withNode(node, StringRange.between(4, 6)).build("123 456"), new CommandContextBuilder(dispatcher, source, rootNode, 0).withNode(otherNode, StringRange.between(0, 3)).withNode(node, StringRange.between(4, 6)).build("123 456"))
     })
 })

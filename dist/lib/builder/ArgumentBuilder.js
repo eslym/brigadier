@@ -1,16 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommandNode_1 = __importDefault(require("../tree/CommandNode"));
-const RootCommandNode_1 = __importDefault(require("../tree/RootCommandNode"));
-class ArgumentBuilder {
-    constructor() {
+var CommandNode_1 = require("../tree/CommandNode");
+var RootCommandNode_1 = require("../tree/RootCommandNode");
+var ArgumentBuilder = /** @class */ (function () {
+    function ArgumentBuilder() {
         this.args = new RootCommandNode_1.default();
         this.modifier = null;
     }
-    then(arg) {
+    ArgumentBuilder.prototype.then = function (arg) {
         if (!(this.target == null)) {
             throw new Error("Cannot add children to a redirected node");
         }
@@ -19,31 +16,31 @@ class ArgumentBuilder {
         else
             this.args.addChild(arg.build());
         return this.getThis();
-    }
-    getArguments() {
+    };
+    ArgumentBuilder.prototype.getArguments = function () {
         return this.args.getChildren();
-    }
-    executes(command) {
+    };
+    ArgumentBuilder.prototype.executes = function (command) {
         this.command = command;
         return this.getThis();
-    }
-    getCommand() {
+    };
+    ArgumentBuilder.prototype.getCommand = function () {
         return this.command;
-    }
-    requires(requirement) {
+    };
+    ArgumentBuilder.prototype.requires = function (requirement) {
         this.requirement = requirement;
         return this.getThis();
-    }
-    getRequirement() {
+    };
+    ArgumentBuilder.prototype.getRequirement = function () {
         return this.requirement;
-    }
-    redirect(target, modifier) {
-        return this.forward(target, modifier == null ? null : (o) => [modifier.apply(o)], false);
-    }
-    fork(target, modifier) {
+    };
+    ArgumentBuilder.prototype.redirect = function (target, modifier) {
+        return this.forward(target, modifier == null ? null : function (o) { return [modifier.apply(o)]; }, false);
+    };
+    ArgumentBuilder.prototype.fork = function (target, modifier) {
         return this.forward(target, modifier, true);
-    }
-    forward(target, modifier, fork) {
+    };
+    ArgumentBuilder.prototype.forward = function (target, modifier, fork) {
         if (this.args.getChildrenCount() > 0) {
             throw new Error("Cannot forward a node with children");
         }
@@ -51,15 +48,17 @@ class ArgumentBuilder {
         this.modifier = modifier;
         this.forks = fork;
         return this.getThis();
-    }
-    getRedirect() {
+    };
+    ArgumentBuilder.prototype.getRedirect = function () {
         return this.target;
-    }
-    getRedirectModifier() {
+    };
+    ArgumentBuilder.prototype.getRedirectModifier = function () {
         return this.modifier;
-    }
-    isFork() {
+    };
+    ArgumentBuilder.prototype.isFork = function () {
         return this.forks;
-    }
-}
+    };
+    return ArgumentBuilder;
+}());
 exports.default = ArgumentBuilder;
+//# sourceMappingURL=ArgumentBuilder.js.map

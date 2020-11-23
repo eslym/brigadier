@@ -1,11 +1,12 @@
-# Node-Brigadier
+# Node-Brigadier-Async
 ___
-This is a nodejs version of Mojang's Brigadier library.
->Brigadier is a command parser & dispatcher, designed and developed for Minecraft: Java Edition and now freely available for use elsewhere under the MIT license.
+This project is a async version fork for [node-brigadier](https://github.com/remtori/brigadier), which covers for more use cases (I guess)
+>This is a nodejs version of Mojang's Brigadier library.
+>>Brigadier is a command parser & dispatcher, designed and developed for Minecraft: Java Edition and now freely available for use elsewhere under the MIT license.
 # Installation
 ___
 ```
-npm install node-brigadier --save
+npm install node-brigadier-async --save
 ```
 # Usage
 ___
@@ -52,12 +53,9 @@ dispatcher.register(
 	)
 )
 
-const parsedCommand = dispatcher.parse("fill 3 4 5 10 11 12 air", {})
-try {
-	dispatcher.execute(parsedCommand);
-} catch (ex) {
-	console.error(ex.getMessage());
-}
+dispatcher.parse("fill 3 4 5 10 11 12 air", {}).then(parsedCommand => {
+    return dispatcher.execute(parsedCommand);
+}).catch(ex => console.error(ex.getMessage()));
 
 // Console
 // BlockPos { x: 3, y: 4, z: 5 }

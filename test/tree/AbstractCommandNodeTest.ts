@@ -6,7 +6,7 @@ import RootCommandNode from "../../src/lib/tree/RootCommandNode"
 import { literal } from "../../src/lib/builder/LiteralArgumentBuilder"
 
 describe('AbstractCommandNodeTest', () => {
-	const command: Command<Object> = () => 0;
+	const command: Command<Object> = async () => 0;
 
 	function getCommandNode(): CommandNode<Object> {
 		return new RootCommandNode();
@@ -18,7 +18,7 @@ describe('AbstractCommandNodeTest', () => {
 		node.addChild(literal("child1").build());
         node.addChild(literal("child2").build());
 		node.addChild(literal("child1").build());
-		
+
 		assert.equal(node.getChildrenCount(), 2);
 	})
 
@@ -32,7 +32,7 @@ describe('AbstractCommandNodeTest', () => {
         node.addChild(literal("child").then(
             literal("grandchild2")
 		).build());
-		
+
 		assert.equal(node.getChildrenCount(), 1);
 		assert.equal(node.getChildren().next().value.getChildrenCount(), 2);
 	})
@@ -42,7 +42,7 @@ describe('AbstractCommandNodeTest', () => {
 
 		node.addChild(literal("child").executes(command).build());
 		node.addChild(literal("child").build());
-		
+
 		expect(node.getChildren().next().value.getCommand()).to.deep.equal(command);
 	})
 
@@ -50,8 +50,8 @@ describe('AbstractCommandNodeTest', () => {
 		const node = getCommandNode();
 
 		node.addChild(literal("child").build());
-		node.addChild(literal("child").executes(command).build());		
-		
+		node.addChild(literal("child").executes(command).build());
+
 		expect(node.getChildren().next().value.getCommand()).to.deep.equal(command);
 	})
 })

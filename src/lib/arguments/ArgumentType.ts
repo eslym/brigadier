@@ -18,10 +18,10 @@ export const DefaultType = {
 }
 
 export default interface ArgumentType<T> {
-    
+
     parse(reader: StringReader): T;
-    
+
     listSuggestions?<S>(context: CommandContext<S>, builder: SuggestionsBuilder): Promise<Suggestions>;
-    
+
     getExamples?(): Iterable<string>;
 }

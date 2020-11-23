@@ -1,30 +1,29 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommandSyntaxException_1 = __importDefault(require("../exceptions/CommandSyntaxException"));
-const EXAMPLES = ["0", "123", "-123"];
-class IntegerArgumentType {
-    constructor(minimum, maximum) {
+var CommandSyntaxException_1 = require("../exceptions/CommandSyntaxException");
+var EXAMPLES = ["0", "123", "-123"];
+var IntegerArgumentType = /** @class */ (function () {
+    function IntegerArgumentType(minimum, maximum) {
         this.minimum = minimum;
         this.maximum = maximum;
     }
-    static integer(min = -Infinity, max = Infinity) {
+    IntegerArgumentType.integer = function (min, max) {
+        if (min === void 0) { min = -Infinity; }
+        if (max === void 0) { max = Infinity; }
         return new IntegerArgumentType(min, max);
-    }
-    static getInteger(context, name) {
+    };
+    IntegerArgumentType.getInteger = function (context, name) {
         return context.getArgument(name, Number);
-    }
-    getMinimum() {
+    };
+    IntegerArgumentType.prototype.getMinimum = function () {
         return this.minimum;
-    }
-    getMaximum() {
+    };
+    IntegerArgumentType.prototype.getMaximum = function () {
         return this.maximum;
-    }
-    parse(reader) {
-        let start = reader.getCursor();
-        let result = reader.readInt();
+    };
+    IntegerArgumentType.prototype.parse = function (reader) {
+        var start = reader.getCursor();
+        var result = reader.readInt();
         if (result < this.minimum) {
             reader.setCursor(start);
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.integerTooLow().createWithContext(reader, result, this.minimum);
@@ -34,15 +33,15 @@ class IntegerArgumentType {
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.integerTooHigh().createWithContext(reader, result, this.maximum);
         }
         return result;
-    }
-    equals(o) {
+    };
+    IntegerArgumentType.prototype.equals = function (o) {
         if (this === o)
             return true;
         if (!(o instanceof IntegerArgumentType))
             return false;
         return this.maximum == o.maximum && this.minimum == o.minimum;
-    }
-    toString() {
+    };
+    IntegerArgumentType.prototype.toString = function () {
         if (this.minimum === -Infinity && this.maximum === Infinity) {
             return "integer()";
         }
@@ -52,9 +51,11 @@ class IntegerArgumentType {
         else {
             return "integer(" + this.minimum + ", " + this.maximum + ")";
         }
-    }
-    getExamples() {
+    };
+    IntegerArgumentType.prototype.getExamples = function () {
         return EXAMPLES;
-    }
-}
+    };
+    return IntegerArgumentType;
+}());
 exports.default = IntegerArgumentType;
+//# sourceMappingURL=IntegerArgumentType.js.map

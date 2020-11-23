@@ -16,7 +16,7 @@ describe('RootCommandNodeTest', () => {
 		node = new RootCommandNode();
 	})
 
-	it('testParse', () => {		
+	it('testParse', () => {
         const reader = new StringReader("hello world");
         node.parse(reader, new CommandContextBuilder(new CommandDispatcher(), new Object(), new RootCommandNode(), 0));
         assert.equal(reader.getCursor(), 0);
@@ -24,7 +24,7 @@ describe('RootCommandNodeTest', () => {
 
 	it('testAddChildNoRoot', done => {
 		try {
-            node.addChild(new RootCommandNode());             
+            node.addChild(new RootCommandNode());
 		} catch (ex) {
 			expect(ex instanceof Error).to.equal(true);
 			done();
@@ -34,17 +34,17 @@ describe('RootCommandNodeTest', () => {
 		assert.fail();
     })
 
-    it('testUsage', () => {				
+    it('testUsage', () => {
         assert.equal(node.getUsageText(), "");
     })
 
-    it('testSuggestions', async () => {		
+    it('testSuggestions', async () => {
         const context = instance(mock(CommandContext));
         const result = await node.listSuggestions(context, new SuggestionsBuilder("", 0));
         assert.equal(result.isEmpty(), true);
     })
 
-	it('testCreateBuilder', done => {				
+	it('testCreateBuilder', done => {
 		try {
 			node.createBuilder();
 		} catch (ex) {
@@ -56,15 +56,15 @@ describe('RootCommandNodeTest', () => {
 		assert.fail();
     })
 
-    it('testEquals', () => {		
-	
+    it('testEquals', () => {
+
 		assert.equal(new RootCommandNode().equals(new RootCommandNode()), true)
-	
+
 		const temp1 = new RootCommandNode<Object>();
 		temp1.addChild(literal("foo").build())
 		const temp2 = new RootCommandNode<Object>()
 		temp2.addChild(literal("foo").build())
 
-		assert.equal(temp1.equals(temp2), true)	
+		assert.equal(temp1.equals(temp2), true)
     })
 })

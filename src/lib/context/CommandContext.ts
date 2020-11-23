@@ -6,8 +6,8 @@ import StringRange from "./StringRange"
 import ParsedArgument from "./ParsedArgument"
 import ParsedCommandNode from "./ParsedCommandNode"
 
-export default class CommandContext<S> {    
-	
+export default class CommandContext<S> {
+
 	private source: S;
 	private input: string;
 	private command: Command<S>;
@@ -35,7 +35,7 @@ export default class CommandContext<S> {
     public copyFor(source: S): CommandContext<S> {
         if (this.source === source)
             return this;
-        
+
         return new CommandContext<S>(source, this.input, this.args, this.command, this.rootNode, this.nodes, this.range, this.child, this.modifier, this.forks);
     }
 
@@ -61,7 +61,7 @@ export default class CommandContext<S> {
 
     public getArgument(name: string, clazz?: Function): any {
         const arg: ParsedArgument<S, any> = this.args.get(name);
-        
+
         if (arg == null) {
             throw new Error("No such argument '" + name + "' exists on this command");
         }
@@ -83,9 +83,7 @@ export default class CommandContext<S> {
         if (this.nodes.length != o.nodes.length || !isEqual(this.nodes, o.nodes)) return false;
         if (!(this.command == null) ? !isEqual(this.command, o.command) : o.command != null) return false;
         if (!isEqual(this.source, o.source)) return false;
-        if (!(this.child == null) ? !this.child.equals(o.child) : o.child != null) return false;
-
-        return true;
+        return !(!(this.child == null) ? !this.child.equals(o.child) : o.child != null);
     }
 
     public getRedirectModifier(): RedirectModifier<S> {

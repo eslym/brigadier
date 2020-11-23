@@ -1,13 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommandSyntaxException_1 = __importDefault(require("./exceptions/CommandSyntaxException"));
-const SYNTAX_ESCAPE = '\\';
-const SYNTAX_QUOTE = '\"';
-class StringReader {
-    constructor(other) {
+var CommandSyntaxException_1 = require("./exceptions/CommandSyntaxException");
+var SYNTAX_ESCAPE = '\\';
+var SYNTAX_QUOTE = '\"';
+var StringReader = /** @class */ (function () {
+    function StringReader(other) {
         this.cursor = 0;
         if (typeof other === "string") {
             this.string = other;
@@ -17,98 +14,98 @@ class StringReader {
             this.cursor = other.cursor;
         }
     }
-    getString() {
+    StringReader.prototype.getString = function () {
         return this.string;
-    }
-    setCursor(cursor) {
+    };
+    StringReader.prototype.setCursor = function (cursor) {
         this.cursor = cursor;
-    }
-    getRemainingLength() {
+    };
+    StringReader.prototype.getRemainingLength = function () {
         return (this.string.length - this.cursor);
-    }
-    getTotalLength() {
+    };
+    StringReader.prototype.getTotalLength = function () {
         return this.string.length;
-    }
-    getCursor() {
+    };
+    StringReader.prototype.getCursor = function () {
         return this.cursor;
-    }
-    getRead() {
+    };
+    StringReader.prototype.getRead = function () {
         return this.string.substring(0, this.cursor);
-    }
-    getRemaining() {
+    };
+    StringReader.prototype.getRemaining = function () {
         return this.string.substring(this.cursor);
-    }
-    canRead(length = 1) {
+    };
+    StringReader.prototype.canRead = function (length) {
+        if (length === void 0) { length = 1; }
         return this.cursor + length <= this.string.length;
-    }
-    peek(offset = 0) {
+    };
+    StringReader.prototype.peek = function (offset) {
+        if (offset === void 0) { offset = 0; }
         return this.string.charAt(this.cursor + offset);
-    }
-    read() {
+    };
+    StringReader.prototype.read = function () {
         return this.string.charAt(this.cursor++);
-    }
-    skip() {
+    };
+    StringReader.prototype.skip = function () {
         this.cursor++;
-    }
-    static isAllowedNumber(c) {
+    };
+    StringReader.isAllowedNumber = function (c) {
         return c >= '0' && c <= '9' || c == '.' || c == '-' || c == '+' || c == 'e' || c == 'E';
-    }
-    skipWhitespace() {
+    };
+    StringReader.prototype.skipWhitespace = function () {
         while ((this.canRead() && /\s/.test(this.peek()))) {
             this.skip();
         }
-    }
-    readInt() {
-        let start = this.cursor;
+    };
+    StringReader.prototype.readInt = function () {
+        var start = this.cursor;
         while (this.canRead() && StringReader.isAllowedNumber(this.peek())) {
             this.skip();
         }
-        let number = this.string.substring(start, this.cursor);
+        var number = this.string.substring(start, this.cursor);
         if (number.length === 0) {
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerExpectedInt().createWithContext(this);
         }
-        const result = parseInt(number);
-        if (isNaN(result) || result !== parseFloat(number)) {
+        var result = parseFloat(number);
+        if (isNaN(result) || result !== Math.round(result)) {
             this.cursor = start;
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerInvalidInt().createWithContext(this, number);
         }
         else
             return result;
-    }
-    readFloat() {
-        let start = this.cursor;
+    };
+    StringReader.prototype.readFloat = function () {
+        var start = this.cursor;
         while ((this.canRead() && StringReader.isAllowedNumber(this.peek()))) {
             this.skip();
         }
-        let number = this.string.substring(start, this.cursor);
+        var number = this.string.substring(start, this.cursor);
         if (number.length === 0) {
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerExpectedFloat().createWithContext(this);
         }
-        const result = parseFloat(number);
-        const strictParseFloatTest = parseFloat(number.substring(result.toString().length, this.cursor));
-        if (isNaN(result) || (!isNaN(strictParseFloatTest) &&
-            strictParseFloatTest !== 0)) {
+        var result = parseFloat(number);
+        if (isNaN(result) || result !== Number(number)) {
             this.cursor = start;
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerInvalidFloat().createWithContext(this, number);
         }
         else
             return result;
-    }
-    static isAllowedInUnquotedString(c) {
+    };
+    StringReader.isAllowedInUnquotedString = function (c) {
         return c >= '0' && c <= '9'
             || c >= 'A' && c <= 'Z'
             || c >= 'a' && c <= 'z'
             || c == '_' || c == '-'
             || c == '.' || c == '+';
-    }
-    readUnquotedString() {
-        let start = this.cursor;
+    };
+    StringReader.prototype.readUnquotedString = function () {
+        var start = this.cursor;
         while (this.canRead() && StringReader.isAllowedInUnquotedString(this.peek())) {
             this.skip();
         }
         return this.string.substring(start, this.cursor);
-    }
-    readQuotedString() {
+    };
+    StringReader.prototype.readQuotedString = function () {
         if (!this.canRead()) {
             return "";
         }
@@ -116,10 +113,10 @@ class StringReader {
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerExpectedStartOfQuote().createWithContext(this);
         }
         this.skip();
-        let result = "";
-        let escaped = false;
+        var result = "";
+        var escaped = false;
         while (this.canRead()) {
-            let c = this.read();
+            var c = this.read();
             if (escaped) {
                 if (c == SYNTAX_QUOTE || c == SYNTAX_ESCAPE) {
                     result += c;
@@ -141,18 +138,18 @@ class StringReader {
             }
         }
         throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerExpectedEndOfQuote().createWithContext(this);
-    }
-    readString() {
+    };
+    StringReader.prototype.readString = function () {
         if (this.canRead() && (this.peek() === SYNTAX_QUOTE)) {
             return this.readQuotedString();
         }
         else {
             return this.readUnquotedString();
         }
-    }
-    readBoolean() {
-        let start = this.cursor;
-        let value = this.readString();
+    };
+    StringReader.prototype.readBoolean = function () {
+        var start = this.cursor;
+        var value = this.readString();
         if (value.length === 0) {
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerExpectedBool().createWithContext(this);
         }
@@ -166,12 +163,14 @@ class StringReader {
             this.cursor = start;
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerInvalidBool().createWithContext(this, value);
         }
-    }
-    expect(c) {
+    };
+    StringReader.prototype.expect = function (c) {
         if (!this.canRead() || this.peek() !== c) {
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.readerExpectedSymbol().createWithContext(this, c);
         }
         this.skip();
-    }
-}
+    };
+    return StringReader;
+}());
 exports.default = StringReader;
+//# sourceMappingURL=StringReader.js.map

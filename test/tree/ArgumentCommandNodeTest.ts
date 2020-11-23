@@ -14,7 +14,7 @@ import StringReader from "../../src/lib/StringReader"
 const { integer	} = DefaultType;
 
 describe('ArgumentCommandNodeTest', () => {
-	const command: Command<Object> = () => 0;
+	const command: Command<Object> = async () => 0;
 	let contextBuilder: CommandContextBuilder<Object>;
 	let node: ArgumentCommandNode<Object, number>;
 
@@ -27,7 +27,7 @@ describe('ArgumentCommandNodeTest', () => {
         contextBuilder = new CommandContextBuilder(new CommandDispatcher(), new Object(), new RootCommandNode(), 0);
 	})
 
-	it('testParse', () => {		
+	it('testParse', () => {
         const reader = new StringReader("123 456");
         node.parse(reader, contextBuilder);
 
@@ -35,16 +35,16 @@ describe('ArgumentCommandNodeTest', () => {
         assert.equal(contextBuilder.getArguments().get("foo").getResult(), 123);
     })
 
-    it('testUsage', () => {		
+    it('testUsage', () => {
         assert.equal(node.getUsageText(), "<foo>");
     })
 
-    it('testSuggestions', async () => {		
+    it('testSuggestions', async () => {
         const result = await node.listSuggestions(contextBuilder.build(""), new SuggestionsBuilder("", 0));
         assert.equal(result.isEmpty(), true);
     })
 
-    it('testEquals', () => {		
+    it('testEquals', () => {
 		testEquality(
 			argument("foo", integer()).build(),
 			argument("foo", integer()).build()
@@ -71,7 +71,7 @@ describe('ArgumentCommandNodeTest', () => {
 		)
     })
 
-    it('testCreateBuilder', () => {		
+    it('testCreateBuilder', () => {
         const builder: RequiredArgumentBuilder<Object, number> = node.createBuilder();
         assert.equal(builder.getName(), node.getName());
         assert.deepEqual(builder.getType(), node.getType());

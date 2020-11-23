@@ -2,6 +2,7 @@ import { assert } from "chai"
 import StringReader from "../../src/lib/StringReader"
 import LiteralMessage from "../../src/lib/LiteralMessage"
 import DynamicCommandExceptionType from "../../src/lib/exceptions/DynamicCommandExceptionType"
+import CommandSyntaxException from "../../src/lib/exceptions/CommandSyntaxException";
 
 describe('DynamicCommandSyntaxExceptionTypeTest', () => {
 
@@ -11,8 +12,8 @@ describe('DynamicCommandSyntaxExceptionTypeTest', () => {
 		const reader = new StringReader("Foo bar");
         reader.setCursor(5);
         const exception = type.createWithContext(reader, "World");
-        assert.deepEqual(exception.getType(), type);
-        assert.equal(exception.getInput(), "Foo bar");
-        assert.equal(exception.getCursor(), 5);
+        assert.deepEqual(CommandSyntaxException.prototype.getType.call(exception), type);
+        assert.equal(CommandSyntaxException.prototype.getInput.call(exception), "Foo bar");
+        assert.equal(CommandSyntaxException.prototype.getCursor.call(exception), 5);
 	})
 })

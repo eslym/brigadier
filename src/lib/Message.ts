@@ -1,3 +1,3 @@
-export default interface Message {    
+export default interface Message {
     getString(): string;
 }

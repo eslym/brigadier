@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const EXAMPLES = ["true", "false"];
-class BoolArgumentType {
-    constructor() {
+var EXAMPLES = ["true", "false"];
+var BoolArgumentType = /** @class */ (function () {
+    function BoolArgumentType() {
     }
-    static bool() {
+    BoolArgumentType.bool = function () {
         return new BoolArgumentType();
-    }
-    static getBool(context, name) {
+    };
+    BoolArgumentType.getBool = function (context, name) {
         return context.getArgument(name, Boolean);
-    }
-    parse(reader) {
+    };
+    BoolArgumentType.prototype.parse = function (reader) {
         return reader.readBoolean();
-    }
-    listSuggestions(context, builder) {
+    };
+    BoolArgumentType.prototype.listSuggestions = function (context, builder) {
         if ("true".startsWith(builder.getRemaining().toLowerCase())) {
             builder.suggest("true");
         }
@@ -21,9 +21,11 @@ class BoolArgumentType {
             builder.suggest("false");
         }
         return builder.buildPromise();
-    }
-    getExamples() {
+    };
+    BoolArgumentType.prototype.getExamples = function () {
         return EXAMPLES;
-    }
-}
+    };
+    return BoolArgumentType;
+}());
 exports.default = BoolArgumentType;
+//# sourceMappingURL=BoolArgumentType.js.map

@@ -1,35 +1,53 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const StringRange_1 = __importDefault(require("../context/StringRange"));
-const Suggestion_1 = __importDefault(require("./Suggestion"));
-const Suggestions_1 = __importDefault(require("./Suggestions"));
-const IntegerSuggestion_1 = __importDefault(require("./IntegerSuggestion"));
-class SuggestionsBuilder {
-    constructor(input, start) {
+var StringRange_1 = require("../context/StringRange");
+var Suggestion_1 = require("./Suggestion");
+var Suggestions_1 = require("./Suggestions");
+var IntegerSuggestion_1 = require("./IntegerSuggestion");
+var SuggestionsBuilder = /** @class */ (function () {
+    function SuggestionsBuilder(input, start) {
         this.result = [];
         this.input = input;
         this.start = start;
         this.remaining = input.substring(start);
     }
-    getInput() {
+    SuggestionsBuilder.prototype.getInput = function () {
         return this.input;
-    }
-    getStart() {
+    };
+    SuggestionsBuilder.prototype.getStart = function () {
         return this.start;
-    }
-    getRemaining() {
+    };
+    SuggestionsBuilder.prototype.getRemaining = function () {
         return this.remaining;
-    }
-    build() {
+    };
+    SuggestionsBuilder.prototype.build = function () {
         return Suggestions_1.default.create(this.input, this.result);
-    }
-    buildPromise() {
+    };
+    SuggestionsBuilder.prototype.buildPromise = function () {
         return Promise.resolve(this.build());
-    }
-    suggest(text, tooltip = null) {
+    };
+    SuggestionsBuilder.prototype.suggest = function (text, tooltip) {
+        if (tooltip === void 0) { tooltip = null; }
         if (typeof text === "number") {
             this.result.push(new IntegerSuggestion_1.default(StringRange_1.default.between(this.start, this.input.length), text, tooltip));
             return this;
@@ -38,16 +56,19 @@ class SuggestionsBuilder {
             return this;
         this.result.push(new Suggestion_1.default(StringRange_1.default.between(this.start, this.input.length), text, tooltip));
         return this;
-    }
-    add(other) {
-        this.result.push(...other.result);
+    };
+    SuggestionsBuilder.prototype.add = function (other) {
+        var _a;
+        (_a = this.result).push.apply(_a, __spread(other.result));
         return this;
-    }
-    createOffset(start) {
+    };
+    SuggestionsBuilder.prototype.createOffset = function (_) {
         return new SuggestionsBuilder(this.input, this.start);
-    }
-    restart() {
+    };
+    SuggestionsBuilder.prototype.restart = function () {
         return new SuggestionsBuilder(this.input, this.start);
-    }
-}
+    };
+    return SuggestionsBuilder;
+}());
 exports.default = SuggestionsBuilder;
+//# sourceMappingURL=SuggestionsBuilder.js.map

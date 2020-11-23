@@ -1,30 +1,29 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const CommandSyntaxException_1 = __importDefault(require("../exceptions/CommandSyntaxException"));
-const EXAMPLES = ["0", "1.2", ".5", "-1", "-.5", "-1234.56"];
-class FloatArgumentType {
-    constructor(minimum, maximum) {
+var CommandSyntaxException_1 = require("../exceptions/CommandSyntaxException");
+var EXAMPLES = ["0", "1.2", ".5", "-1", "-.5", "-1234.56"];
+var FloatArgumentType = /** @class */ (function () {
+    function FloatArgumentType(minimum, maximum) {
         this.minimum = minimum;
         this.maximum = maximum;
     }
-    static float(min = -Infinity, max = Infinity) {
+    FloatArgumentType.float = function (min, max) {
+        if (min === void 0) { min = -Infinity; }
+        if (max === void 0) { max = Infinity; }
         return new FloatArgumentType(min, max);
-    }
-    static getFloat(context, name) {
+    };
+    FloatArgumentType.getFloat = function (context, name) {
         return context.getArgument(name, Number);
-    }
-    getMinimum() {
+    };
+    FloatArgumentType.prototype.getMinimum = function () {
         return this.minimum;
-    }
-    getMaximum() {
+    };
+    FloatArgumentType.prototype.getMaximum = function () {
         return this.maximum;
-    }
-    parse(reader) {
-        let start = reader.getCursor();
-        let result = reader.readFloat();
+    };
+    FloatArgumentType.prototype.parse = function (reader) {
+        var start = reader.getCursor();
+        var result = reader.readFloat();
         if (result < this.minimum) {
             reader.setCursor(start);
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.integerTooLow().createWithContext(reader, result, this.minimum);
@@ -34,15 +33,15 @@ class FloatArgumentType {
             throw CommandSyntaxException_1.default.BUILT_IN_EXCEPTIONS.integerTooHigh().createWithContext(reader, result, this.maximum);
         }
         return result;
-    }
-    equals(o) {
+    };
+    FloatArgumentType.prototype.equals = function (o) {
         if (this === o)
             return true;
         if (!(o instanceof FloatArgumentType))
             return false;
         return this.maximum == o.maximum && this.minimum == o.minimum;
-    }
-    toString() {
+    };
+    FloatArgumentType.prototype.toString = function () {
         if (this.minimum === -Infinity && this.maximum === Infinity) {
             return "float()";
         }
@@ -52,9 +51,11 @@ class FloatArgumentType {
         else {
             return "float(" + this.minimum + ", " + this.maximum + ")";
         }
-    }
-    getExamples() {
+    };
+    FloatArgumentType.prototype.getExamples = function () {
         return EXAMPLES;
-    }
-}
+    };
+    return FloatArgumentType;
+}());
 exports.default = FloatArgumentType;
+//# sourceMappingURL=FloatArgumentType.js.map

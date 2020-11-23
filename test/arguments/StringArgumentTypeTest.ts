@@ -9,17 +9,17 @@ const { escapeIfRequired } = StringArgumentType
 
 describe('StringArgumentTypeTest', () => {
 
-	it('testParseWord', () => {		
+	it('testParseWord', () => {
 		const mockedReader = mock(StringReader);
 		when(mockedReader.readUnquotedString()).thenReturn("hello");
-		const reader = instance(mockedReader)        
+		const reader = instance(mockedReader)
 
 		assert.equal(word().parse(reader), "hello");
-		
+
         verify(mockedReader.readUnquotedString()).called();
     })
 
-    it('testParseString', () => {		
+    it('testParseString', () => {
         const mockedReader = mock(StringReader);
 		when(mockedReader.readString()).thenReturn("hello world");
 		const reader = instance(mockedReader)
@@ -28,34 +28,34 @@ describe('StringArgumentTypeTest', () => {
         verify(mockedReader.readString()).called();
     })
 
-    it('testParseGreedyString', () => {		
+    it('testParseGreedyString', () => {
         const reader = new StringReader("Hello world! This is a test.");
         assert.equal(greedyString().parse(reader), "Hello world! This is a test.");
         assert.equal(reader.canRead(), false);
     })
 
-    it('testToString', () => {		
+    it('testToString', () => {
         assert.equal(string() + "", "string()");
     })
 
-    it('testEscapeIfRequired_notRequired', () => {		
+    it('testEscapeIfRequired_notRequired', () => {
         assert.equal(escapeIfRequired("hello"), "hello");
         assert.equal(escapeIfRequired(""), "");
     })
 
-    it('testEscapeIfRequired_multipleWords', () => {		
+    it('testEscapeIfRequired_multipleWords', () => {
         assert.equal(escapeIfRequired("hello world"), "\"hello world\"");
     })
 
-    it('testEscapeIfRequired_quote', () => {		
+    it('testEscapeIfRequired_quote', () => {
         assert.equal(escapeIfRequired("hello \"world\"!"), "\"hello \\\"world\\\"!\"");
     })
 
-    it('testEscapeIfRequired_escapes', () => {		
+    it('testEscapeIfRequired_escapes', () => {
         assert.equal(escapeIfRequired("\\"), "\"\\\\\"");
     })
 
-    it('testEscapeIfRequired_singleQuote', () => {		
+    it('testEscapeIfRequired_singleQuote', () => {
         assert.equal(escapeIfRequired("\""), "\"\\\"\"");
     })
 })

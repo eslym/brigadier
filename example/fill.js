@@ -28,7 +28,7 @@ dispatcher.register(
 	literal("fill").then(
 		argument("pos1", new BlockPos()).then(
 			argument("pos2", new BlockPos()).then(
-				argument("block", string()).executes(context => {
+				argument("block", string()).executes(async context => {
 					console.log(context.getArgument("pos1", BlockPos))
 					console.log(context.getArgument("pos2", BlockPos))
 					console.log(context.getArgument("block", /*String*/ 3))
@@ -39,9 +39,8 @@ dispatcher.register(
 	)
 )
 
-const parsedCommand = dispatcher.parse("fill 3 4 5 10 11 12 air", {})
-try {
-	dispatcher.execute(parsedCommand);
-} catch (ex) {
+dispatcher.parse("fill 3 4 5 10 11 12 air", {}).then(parsedCommand => {
+	return dispatcher.execute(parsedCommand);
+}).catch((ex) => {
 	console.error(ex.getMessage());
-}
+});

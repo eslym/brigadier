@@ -1,14 +1,42 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const StringRange_1 = __importDefault(require("./StringRange"));
-const CommandContext_1 = __importDefault(require("./CommandContext"));
-const SuggestionContext_1 = __importDefault(require("./SuggestionContext"));
-const ParsedCommandNode_1 = __importDefault(require("./ParsedCommandNode"));
-class CommandContextBuilder {
-    constructor(dispatcher, source, rootNode, start) {
+var StringRange_1 = require("./StringRange");
+var CommandContext_1 = require("./CommandContext");
+var SuggestionContext_1 = require("./SuggestionContext");
+var ParsedCommandNode_1 = require("./ParsedCommandNode");
+var CommandContextBuilder = /** @class */ (function () {
+    function CommandContextBuilder(dispatcher, source, rootNode, start) {
         this.args = new Map();
         this.nodes = [];
         this.modifier = null;
@@ -17,81 +45,83 @@ class CommandContextBuilder {
         this.source = source;
         this.range = StringRange_1.default.at(start);
     }
-    withSource(source) {
+    CommandContextBuilder.prototype.withSource = function (source) {
         this.source = source;
         return this;
-    }
-    getSource() {
+    };
+    CommandContextBuilder.prototype.getSource = function () {
         return this.source;
-    }
-    getRootNode() {
+    };
+    CommandContextBuilder.prototype.getRootNode = function () {
         return this.rootNode;
-    }
-    withArgument(name, argument) {
+    };
+    CommandContextBuilder.prototype.withArgument = function (name, argument) {
         this.args.set(name, argument);
         return this;
-    }
-    getArguments() {
+    };
+    CommandContextBuilder.prototype.getArguments = function () {
         return this.args;
-    }
-    withCommand(command) {
+    };
+    CommandContextBuilder.prototype.withCommand = function (command) {
         this.command = command;
         return this;
-    }
-    withNode(node, range) {
+    };
+    CommandContextBuilder.prototype.withNode = function (node, range) {
         this.nodes.push(new ParsedCommandNode_1.default(node, range));
         this.range = StringRange_1.default.encompassing(this.range, range);
         this.modifier = node.getRedirectModifier();
         this.forks = node.isFork();
         return this;
-    }
-    copy() {
-        const copy = new CommandContextBuilder(this.dispatcher, this.source, this.rootNode, this.range.getStart());
+    };
+    CommandContextBuilder.prototype.copy = function () {
+        var _a;
+        var copy = new CommandContextBuilder(this.dispatcher, this.source, this.rootNode, this.range.getStart());
         copy.command = this.command;
-        copy.args = new Map([...copy.args, ...this.args]);
-        copy.nodes.push(...this.nodes);
+        copy.args = new Map(__spread(copy.args, this.args));
+        (_a = copy.nodes).push.apply(_a, __spread(this.nodes));
         copy.child = this.child;
         copy.range = this.range;
         copy.forks = this.forks;
         return copy;
-    }
-    withChild(child) {
+    };
+    CommandContextBuilder.prototype.withChild = function (child) {
         this.child = child;
         return this;
-    }
-    getChild() {
+    };
+    CommandContextBuilder.prototype.getChild = function () {
         return this.child;
-    }
-    getLastChild() {
-        let result = this;
+    };
+    CommandContextBuilder.prototype.getLastChild = function () {
+        var result = this;
         while (result.getChild() != null) {
             result = result.getChild();
         }
         return result;
-    }
-    getCommand() {
+    };
+    CommandContextBuilder.prototype.getCommand = function () {
         return this.command;
-    }
-    getNodes() {
+    };
+    CommandContextBuilder.prototype.getNodes = function () {
         return this.nodes;
-    }
-    build(input) {
+    };
+    CommandContextBuilder.prototype.build = function (input) {
         return new CommandContext_1.default(this.source, input, this.args, this.command, this.rootNode, this.nodes, this.range, this.child == null ? null : this.child.build(input), this.modifier, this.forks);
-    }
-    getDispatcher() {
+    };
+    CommandContextBuilder.prototype.getDispatcher = function () {
         return this.dispatcher;
-    }
-    getRange() {
+    };
+    CommandContextBuilder.prototype.getRange = function () {
         return this.range;
-    }
-    findSuggestionContext(cursor) {
+    };
+    CommandContextBuilder.prototype.findSuggestionContext = function (cursor) {
+        var e_1, _a;
         if ((this.range.getStart() <= cursor)) {
             if ((this.range.getEnd() < cursor)) {
                 if ((this.child != null)) {
                     return this.child.findSuggestionContext(cursor);
                 }
                 else if (this.nodes.length > 0) {
-                    let last = this.nodes[this.nodes.length - 1];
+                    var last = this.nodes[this.nodes.length - 1];
                     return new SuggestionContext_1.default(last.getNode(), last.getRange().getEnd() + 1);
                 }
                 else {
@@ -99,13 +129,23 @@ class CommandContextBuilder {
                 }
             }
             else {
-                let prev = this.rootNode;
-                for (let node of this.nodes) {
-                    let nodeRange = node.getRange();
-                    if (nodeRange.getStart() <= cursor && cursor <= nodeRange.getEnd()) {
-                        return new SuggestionContext_1.default(prev, nodeRange.getStart());
+                var prev = this.rootNode;
+                try {
+                    for (var _b = __values(this.nodes), _c = _b.next(); !_c.done; _c = _b.next()) {
+                        var node = _c.value;
+                        var nodeRange = node.getRange();
+                        if (nodeRange.getStart() <= cursor && cursor <= nodeRange.getEnd()) {
+                            return new SuggestionContext_1.default(prev, nodeRange.getStart());
+                        }
+                        prev = node.getNode();
                     }
-                    prev = node.getNode();
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                    }
+                    finally { if (e_1) throw e_1.error; }
                 }
                 if ((prev == null)) {
                     throw new Error("Can't find node before cursor");
@@ -114,6 +154,8 @@ class CommandContextBuilder {
             }
         }
         throw new Error("Can't find node before cursor");
-    }
-}
+    };
+    return CommandContextBuilder;
+}());
 exports.default = CommandContextBuilder;
+//# sourceMappingURL=CommandContextBuilder.js.map

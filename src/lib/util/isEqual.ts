@@ -7,7 +7,7 @@ export default function isEqual(a: any, b: any): boolean { // @Warning: May caus
 		return false;
 
 	if (!(a instanceof Object))
-		return false;	
+		return false;
 
 	if (typeof a === "function")
 		return a.toString() === b.toString();
@@ -18,7 +18,7 @@ export default function isEqual(a: any, b: any): boolean { // @Warning: May caus
 	if (a instanceof Map)
 		return isMapEqual(a, b);
 
-	if (a instanceof Set) 
+	if (a instanceof Set)
 		return isArrayEqual([...a], [...b]);
 
 	if (a instanceof Array)
@@ -39,9 +39,9 @@ function isMapEqual(a: Map<any, any>, b: Map<any, any>): boolean {
 		if (!isEqual(testVal, val))
 			return false;
         if (testVal === undefined && !b.has(key))
-            return false;    
+            return false;
 	}
-	
+
 	return true;
 }
 
@@ -72,4 +72,4 @@ function isObjectEqual(a: TypicalObject, b: TypicalObject): boolean {
 interface TypicalObject {
 	[ index: string ]: any;
 	[ index: number ]: any;
-};
+}

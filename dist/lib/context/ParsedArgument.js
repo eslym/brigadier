@@ -1,26 +1,25 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const StringRange_1 = __importDefault(require("./StringRange"));
-class ParsedArgument {
-    constructor(start, end, result) {
+var StringRange_1 = require("./StringRange");
+var ParsedArgument = /** @class */ (function () {
+    function ParsedArgument(start, end, result) {
         this.range = StringRange_1.default.between(start, end);
         this.result = result;
     }
-    getRange() {
+    ParsedArgument.prototype.getRange = function () {
         return this.range;
-    }
-    getResult() {
+    };
+    ParsedArgument.prototype.getResult = function () {
         return this.result;
-    }
-    equals(o) {
+    };
+    ParsedArgument.prototype.equals = function (o) {
         if (this === o)
             return true;
         if (!(o instanceof ParsedArgument))
             return false;
         return this.range.equals(o.range) && this.result === o.result;
-    }
-}
+    };
+    return ParsedArgument;
+}());
 exports.default = ParsedArgument;
+//# sourceMappingURL=ParsedArgument.js.map

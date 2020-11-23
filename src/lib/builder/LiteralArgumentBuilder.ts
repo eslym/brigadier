@@ -2,14 +2,14 @@ import LiteralCommandNode from "../tree/LiteralCommandNode"
 import ArgumentBuilder from "./ArgumentBuilder"
 
 export default class LiteralArgumentBuilder<S> extends ArgumentBuilder<S, LiteralArgumentBuilder<S>> {
-    
+
     private literal: string;
-    
+
     public constructor (literal: string) {
 		super();
         this.literal = literal;
     }
-    
+
     public static literal<S>(name: string): LiteralArgumentBuilder<S> {
         return new LiteralArgumentBuilder(name);
     }
@@ -17,7 +17,7 @@ export default class LiteralArgumentBuilder<S> extends ArgumentBuilder<S, Litera
     public getThis(): LiteralArgumentBuilder<S> {
         return this;
     }
-    
+
     public getLiteral(): string {
         return this.literal;
     }
@@ -27,7 +27,7 @@ export default class LiteralArgumentBuilder<S> extends ArgumentBuilder<S, Litera
         for (let arg of this.getArguments()) {
             result.addChild(arg);
         }
-        
+
         return result;
     }
 }

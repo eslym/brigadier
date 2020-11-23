@@ -9,25 +9,25 @@ const { integer } = DefaultType;
 describe('LiteralArgumentBuilderTest', () => {
 
 	let builder: LiteralArgumentBuilder<Object>;
-	const command: Command<Object> = () => 0;
+	const command: Command<Object> = async () => 0;
 
 	beforeEach(() => {
 		builder = new LiteralArgumentBuilder("foo");
 	})
 
-	it('testBuild', () => {		
+	it('testBuild', () => {
         const node = builder.build();
         assert.equal(node.getLiteral(), "foo");
     })
 
-    it('testBuildWithExecutor', () => {		
+    it('testBuildWithExecutor', () => {
         const node = builder.executes(command).build();
 
         assert.equal(node.getLiteral(), "foo");
         assert.equal(node.getCommand(), command);
     })
 
-    it('testBuildWithChildren', () => {		
+    it('testBuildWithChildren', () => {
         builder.then(argument("bar", integer()));
         builder.then(argument("baz", integer()));
         const node = builder.build();

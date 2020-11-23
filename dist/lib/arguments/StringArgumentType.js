@@ -1,37 +1,46 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const StringReader_1 = __importDefault(require("../StringReader"));
+exports.StringType = void 0;
+var StringReader_1 = require("../StringReader");
 var StringType;
 (function (StringType) {
     StringType["SINGLE_WORD"] = "words_with_underscores";
     StringType["QUOTABLE_PHRASE"] = "\"quoted phrase\"";
     StringType["GREEDY_PHRASE"] = "words with spaces";
 })(StringType = exports.StringType || (exports.StringType = {}));
-class StringArgumentType {
-    constructor(type) {
+var StringArgumentType = /** @class */ (function () {
+    function StringArgumentType(type) {
         this.type = type;
     }
-    static word() {
+    StringArgumentType.word = function () {
         return new StringArgumentType(StringType.SINGLE_WORD);
-    }
-    static string() {
+    };
+    StringArgumentType.string = function () {
         return new StringArgumentType(StringType.QUOTABLE_PHRASE);
-    }
-    static greedyString() {
+    };
+    StringArgumentType.greedyString = function () {
         return new StringArgumentType(StringType.GREEDY_PHRASE);
-    }
-    static getString(context, name) {
+    };
+    StringArgumentType.getString = function (context, name) {
         return context.getArgument(name, String);
-    }
-    getType() {
+    };
+    StringArgumentType.prototype.getType = function () {
         return this.type;
-    }
-    parse(reader) {
+    };
+    StringArgumentType.prototype.parse = function (reader) {
         if (this.type == StringType.GREEDY_PHRASE) {
-            let text = reader.getRemaining();
+            var text = reader.getRemaining();
             reader.setCursor(reader.getTotalLength());
             return text;
         }
@@ -41,22 +50,33 @@ class StringArgumentType {
         else {
             return reader.readString();
         }
-    }
-    toString() {
+    };
+    StringArgumentType.prototype.toString = function () {
         return "string()";
-    }
-    static escapeIfRequired(input) {
-        for (let c of input) {
-            if (!StringReader_1.default.isAllowedInUnquotedString(c)) {
-                return StringArgumentType.escape(input);
+    };
+    StringArgumentType.escapeIfRequired = function (input) {
+        var e_1, _a;
+        try {
+            for (var input_1 = __values(input), input_1_1 = input_1.next(); !input_1_1.done; input_1_1 = input_1.next()) {
+                var c = input_1_1.value;
+                if (!StringReader_1.default.isAllowedInUnquotedString(c)) {
+                    return StringArgumentType.escape(input);
+                }
             }
         }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (input_1_1 && !input_1_1.done && (_a = input_1.return)) _a.call(input_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
         return input;
-    }
-    static escape(input) {
-        let result = "\"";
-        for (let i = 0; i < input.length; i++) {
-            const c = input.charAt(i);
+    };
+    StringArgumentType.escape = function (input) {
+        var result = "\"";
+        for (var i = 0; i < input.length; i++) {
+            var c = input.charAt(i);
             if (c == '\\' || c == '"') {
                 result += '\\';
             }
@@ -64,6 +84,8 @@ class StringArgumentType {
         }
         result += "\"";
         return result;
-    }
-}
+    };
+    return StringArgumentType;
+}());
 exports.default = StringArgumentType;
+//# sourceMappingURL=StringArgumentType.js.map
